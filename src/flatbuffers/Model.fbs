@@ -1,0 +1,8 @@
+include "Rows.fbs";
+
+namespace edu.berkeley.cs.rise.opaque.tuix;
+
+table Parameters {
+    value: [DoubleField];
+}
+

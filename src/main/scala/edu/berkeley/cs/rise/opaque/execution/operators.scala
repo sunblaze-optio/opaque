@@ -129,6 +129,20 @@ trait OpaqueOperatorExec extends SparkPlan {
     }
   }
 
+  /*def timeOperatorBinary[A](leftRDD: RDD[A], rightRDD: RDD[A], desc: String)(f: (RDD[A], RDD[A]) => RDD[Block]): RDD[Block] = {
+    import Utils.time
+    Utils.ensureCached(leftRDD)
+    time(s"Force left child of $desc") {leftRDD.count}
+    Utils.ensureCached(rightRDD)
+    time(s"Force right child of $desc") {rightRDD.count}
+    time(desc) {
+      val result = f(leftRDD, rightRDD)
+      Utils.ensureCached(result)
+      result.count
+      result
+    }
+  }*/
+
   /**
    * An Opaque operator cannot return plaintext rows, so this method should normally not be invoked.
    * Instead use executeBlocked, which returns the data as encrypted blocks.
@@ -195,6 +209,89 @@ trait OpaqueOperatorExec extends SparkPlan {
       buf.toArray
     }
   }
+}
+
+case class Clip2NormExec(bound: Double, child: SparkPlan) 
+  extends UnaryExecNode with OpaqueOperatorExec {
+
+  override def output: Seq[Attribute] = child.output
+
+  override def executeBlocked(): RDD[Block] = {
+    val boundSer = Utils.serializeBound(bound)
+    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "Clip2NormExec") {
+      childRDD => childRDD.map { block =>
+        val (enclave, eid) = Utils.initEnclave()
+        Block(enclave.Clip2Norm(eid, boundSer, block.bytes))
+      }
+    }
+  }
+}
+
+case class ClipInfNormExec(bound: Double, child: SparkPlan)
+  extends UnaryExecNode with OpaqueOperatorExec {
+
+  override def output: Seq[Attribute] = child.output
+
+  override def executeBlocked(): RDD[Block] = {
+    val boundSer = Utils.serializeBound(bound)
+    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "ClipInfNormExec") {
+      childRDD => childRDD.map { block =>
+        val (enclave, eid) = Utils.initEnclave()
+        Block(enclave.ClipInfNorm(eid, boundSer, block.bytes))
+      }
+    }
+  }
+}
+
+case class LrGradientExec(regterm: Double, theta: Seq[Double], child: SparkPlan)
+  extends UnaryExecNode with OpaqueOperatorExec {
+
+  override def output: Seq[Attribute] = child.output
+
+  override def executeBlocked(): RDD[Block] = {
+    val regtermSer = Utils.serializeRegularizationTerm(regterm)
+    val thetaSer = Utils.serializeParameters(theta)
+    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "LrGradientExec") {
+      childRDD => childRDD.map { block =>
+        val (enclave, eid) = Utils.initEnclave()
+        Block(enclave.LrGradient(eid, regtermSer, thetaSer, block.bytes))
+      }
+    }
+  }
+
+}
+
+case class GaussianNoiseExec(noise_para: Double, shape: Int, child: SparkPlan)
+  extends UnaryExecNode with OpaqueOperatorExec {
+
+  override def output: Seq[Attribute] = child.output
+
+  override def executeBlocked(): RDD[Block] = {
+    val noise_paraSer = Utils.serializeNoisePara(noise_para)
+    val shapeSer = Utils.serializeShape(shape)
+    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "GaussianNoiseExec") {
+      childRDD => childRDD.map { block =>
+        val (enclave, eid) = Utils.initEnclave()
+        Block(enclave.GaussianNoise(eid, noise_paraSer, shapeSer, block.bytes))
+      }
+    }
+
+  }
+}
+
+case class StakeExec(child: SparkPlan)
+  extends UnaryExecNode with OpaqueOperatorExec {
+
+  override def output: Seq[Attribute] = child.output
+
+  override def executeBlocked(): RDD[Block] = {
+    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "StakeExec") {
+      childRDD => childRDD.map { block =>
+        val (enclave, eid) = Utils.initEnclave()
+        Block(enclave.Stake(eid, block.bytes))
+      }
+    }
+  }  
 }
 
 case class ObliviousProjectExec(projectList: Seq[NamedExpression], child: SparkPlan)

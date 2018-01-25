@@ -7,6 +7,8 @@
 #include "Expr_generated.h"
 #include "Rows_generated.h"
 #include "operators_generated.h"
+#include "Hyper_generated.h"
+#include "Model_generated.h"
 
 #include "Crypto.h"
 #include "common.h"

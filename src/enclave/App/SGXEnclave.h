@@ -11,6 +11,21 @@ extern "C" {
   JNIEXPORT void JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_StopEnclave(
     JNIEnv *, jobject, jlong);
 
+  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Clip2Norm(
+    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
+
+  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_ClipInfNorm(
+    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
+
+  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LrGradient(
+    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray, jbyteArray);
+
+  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_GaussianNoise(
+    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray, jbyteArray);
+
+  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Stake(
+    JNIEnv *, jobject, jlong, jbyteArray);
+
   JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Project(
     JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
 

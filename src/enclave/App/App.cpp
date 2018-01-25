@@ -698,6 +698,166 @@ JNIEXPORT void JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Sto
   sgx_check("StopEnclave", sgx_destroy_enclave(eid));
 }
 
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Clip2Norm(
+  JNIEnv *env, jobject obj, jlong eid, jbyteArray bound, jbyteArray input_rows) {
+  (void)obj;
+
+  jboolean if_copy;
+  
+  uint32_t bound_length = (uint32_t) env->GetArrayLength(bound);
+  uint8_t *bound_ptr = (uint8_t *) env->GetByteArrayElements(bound, &if_copy);
+
+  uint32_t input_rows_length = (uint32_t) env->GetArrayLength(input_rows);
+  uint8_t *input_rows_ptr = (uint8_t *) env->GetByteArrayElements(input_rows, &if_copy);
+
+  uint8_t *output_rows;
+  size_t output_rows_length;
+
+  sgx_check("Clip2Norm",
+            ecall_clip2norm(
+              eid, bound_ptr, bound_length,
+              input_rows_ptr, input_rows_length,
+              &output_rows, &output_rows_length));
+
+  env->ReleaseByteArrayElements(bound, (jbyte *) bound_ptr, 0);
+  env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
+
+  jbyteArray ret = env->NewByteArray(output_rows_length);
+  env->SetByteArrayRegion(ret, 0, output_rows_length, (jbyte *) output_rows);
+  free(output_rows);
+
+  return ret;
+}
+
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_ClipInfNorm(
+  JNIEnv *env, jobject obj, jlong eid, jbyteArray bound, jbyteArray input_rows) {
+  (void)obj;
+
+  jboolean if_copy;
+
+  uint32_t bound_length = (uint32_t) env->GetArrayLength(bound);
+  uint8_t *bound_ptr = (uint8_t *) env->GetByteArrayElements(bound, &if_copy);
+
+  uint32_t input_rows_length = (uint32_t) env->GetArrayLength(input_rows);
+  uint8_t *input_rows_ptr = (uint8_t *) env->GetByteArrayElements(input_rows, &if_copy);
+
+  uint8_t *output_rows;
+  size_t output_rows_length;
+
+  sgx_check("ClipInfNorm",
+            ecall_clipinfnorm(
+              eid, bound_ptr, bound_length,
+              input_rows_ptr, input_rows_length,
+              &output_rows, &output_rows_length));
+
+  env->ReleaseByteArrayElements(bound, (jbyte *) bound_ptr, 0);
+  env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
+
+  jbyteArray ret = env->NewByteArray(output_rows_length);
+  env->SetByteArrayRegion(ret, 0, output_rows_length, (jbyte *) output_rows);
+  free(output_rows);
+
+  return ret;
+}
+
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LrGradient(
+  JNIEnv *env, jobject obj, jlong eid, jbyteArray regterm, jbyteArray theta, jbyteArray input_rows) {
+  (void)obj;
+
+  jboolean if_copy;
+
+  uint32_t regterm_length = (uint32_t) env->GetArrayLength(regterm);
+  uint8_t *regterm_ptr = (uint8_t *) env->GetByteArrayElements(regterm, &if_copy);
+
+  uint32_t theta_length = (uint32_t) env->GetArrayLength(theta);
+  uint8_t *theta_ptr = (uint8_t *) env->GetByteArrayElements(theta, &if_copy);
+
+  uint32_t input_rows_length = (uint32_t) env->GetArrayLength(input_rows);
+  uint8_t *input_rows_ptr = (uint8_t *) env->GetByteArrayElements(input_rows, &if_copy);
+
+  uint8_t *output_rows;
+  size_t output_rows_length;
+
+  sgx_check("LrGradient",
+            ecall_lrgradient(
+              eid, regterm_ptr, regterm_length,
+              theta_ptr, theta_length,
+              input_rows_ptr, input_rows_length,
+              &output_rows, &output_rows_length));
+
+  env->ReleaseByteArrayElements(regterm, (jbyte *) regterm_ptr, 0);
+  env->ReleaseByteArrayElements(theta, (jbyte *) theta_ptr, 0);
+  env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
+
+  jbyteArray ret = env->NewByteArray(output_rows_length);
+  env->SetByteArrayRegion(ret, 0, output_rows_length, (jbyte *) output_rows);
+  free(output_rows);
+
+  return ret;
+}
+
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_GaussianNoise(
+  JNIEnv *env, jobject obj, jlong eid, jbyteArray noise_para, jbyteArray shape, jbyteArray input_rows) {
+  (void)obj;
+
+  jboolean if_copy;
+
+  uint32_t noise_para_length = (uint32_t) env->GetArrayLength(noise_para);
+  uint8_t *noise_para_ptr = (uint8_t *) env->GetByteArrayElements(noise_para, &if_copy);
+
+  uint32_t shape_length = (uint32_t) env->GetArrayLength(shape);
+  uint8_t *shape_ptr = (uint8_t *) env->GetByteArrayElements(shape, &if_copy);
+
+  uint32_t input_rows_length = (uint32_t) env->GetArrayLength(input_rows);
+  uint8_t *input_rows_ptr = (uint8_t *) env->GetByteArrayElements(input_rows, &if_copy);
+
+  uint8_t *output_rows;
+  size_t output_rows_length;
+
+  sgx_check("GaussianNoise",
+            ecall_gaussiannoise(
+              eid, noise_para_ptr, noise_para_length,
+              shape_ptr, shape_length,
+              input_rows_ptr, input_rows_length,
+              &output_rows, &output_rows_length));
+
+  env->ReleaseByteArrayElements(noise_para, (jbyte *) noise_para_ptr, 0);
+  env->ReleaseByteArrayElements(shape, (jbyte *) shape_ptr, 0);
+  env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
+
+  jbyteArray ret = env->NewByteArray(output_rows_length);
+  env->SetByteArrayRegion(ret, 0, output_rows_length, (jbyte *) output_rows);
+  free(output_rows);
+
+  return ret;
+}
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Stake(
+  JNIEnv *env, jobject obj, jlong eid, jbyteArray input_rows) {
+  (void)obj;
+
+  jboolean if_copy;
+
+  uint32_t input_rows_length = (uint32_t) env->GetArrayLength(input_rows);
+  uint8_t *input_rows_ptr = (uint8_t *) env->GetByteArrayElements(input_rows, &if_copy);
+
+  uint8_t *output_rows;
+  size_t output_rows_length;
+
+  sgx_check("Stake",
+            ecall_stake(
+              eid,
+              input_rows_ptr, input_rows_length,
+              &output_rows, &output_rows_length));
+
+  env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
+
+  jbyteArray ret = env->NewByteArray(output_rows_length);
+  env->SetByteArrayRegion(ret, 0, output_rows_length, (jbyte *) output_rows);
+  free(output_rows);
+
+  return ret;
+}
+
 JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Project(
   JNIEnv *env, jobject obj, jlong eid, jbyteArray project_list, jbyteArray input_rows) {
   (void)obj;

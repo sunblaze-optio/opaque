@@ -104,6 +104,46 @@ case class EncryptedBlockRDD(
   override def producedAttributes: AttributeSet = outputSet
 }
 
+case class Stake(child: OpaqueOperator) 
+  extends UnaryNode with OpaqueOperator {
+
+  override def output: Seq[Attribute] = child.output
+}
+
+case class Clip2Norm(bound: Double, child: OpaqueOperator)
+  extends UnaryNode with OpaqueOperator {
+
+  override def output: Seq[Attribute] = child.output
+}
+
+case class ClipInfNorm(bound: Double, child: OpaqueOperator)
+  extends UnaryNode with OpaqueOperator {
+
+  override def output: Seq[Attribute] = child.output
+}
+
+case class LrGradient(regterm: Double, theta: Seq[Double], child: OpaqueOperator)
+  extends UnaryNode with OpaqueOperator {
+
+  override def output: Seq[Attribute] = child.output
+}
+
+/*case class HuberSvmGradient(regterm: Double, left: OpaqueOperator, right: OpaqueOperator)
+  extends BinaryNode with OpaqueOperator {
+
+  override def output: Seq[Attribute] = left.output
+}
+
+case class LaplaceGradient(noise_para: Double)
+  extends LeafNode with OpaqueOperator {
+}*/
+
+case class GaussianNoise(noise_para: Double, shape: Int, child: OpaqueOperator)
+  extends UnaryNode with OpaqueOperator {
+
+  override def output: Seq[Attribute] = child.output
+}
+
 case class ObliviousProject(projectList: Seq[NamedExpression], child: OpaqueOperator)
   extends UnaryNode with OpaqueOperator {
 

@@ -5,6 +5,10 @@
 
 #include "Aggregate.h"
 #include "Crypto.h"
+#include "Stake.h"
+#include "Clip.h"
+#include "Gradient.h"
+#include "Noise.h"
 #include "Filter.h"
 #include "Join.h"
 #include "Project.h"
@@ -29,6 +33,49 @@ void ecall_decrypt(uint8_t *ciphertext,
   (void)ciphertext_length;
   (void)plaintext_length;
   decrypt(ciphertext, ciphertext_length, plaintext);
+}
+
+void ecall_clip2norm(uint8_t *bound, size_t bound_length,
+                  uint8_t *input_rows, size_t input_rows_length,
+                  uint8_t **output_rows, size_t *output_rows_length) {
+  clip2norm(bound, bound_length,
+         input_rows, input_rows_length,
+         output_rows, output_rows_length);
+}
+
+void ecall_clipinfnorm(uint8_t* bound, size_t bound_length,
+                  uint8_t *input_rows, size_t input_rows_length,
+                  uint8_t **output_rows, size_t *output_rows_length) {
+  clipinfnorm(bound, bound_length,
+         input_rows, input_rows_length,
+         output_rows, output_rows_length);
+}
+
+void ecall_lrgradient(uint8_t* regterm, size_t regterm_length,
+                  uint8_t *theta, size_t theta_length,
+                  uint8_t *input_rows, size_t input_rows_length,
+                  uint8_t **output_rows, size_t *output_rows_length) {
+  lrgradient(regterm, regterm_length,
+          theta, theta_length,
+          input_rows, input_rows_length,
+          output_rows, output_rows_length);
+}
+
+void ecall_gaussiannoise(uint8_t* noise_para, size_t noise_para_length,
+                  uint8_t *shape, size_t shape_length,
+                  uint8_t *input_rows, size_t input_rows_length,
+                  uint8_t **output_rows, size_t *output_rows_length) {
+  gaussiannoise(noise_para, noise_para_length,
+          shape, shape_length,
+          input_rows, input_rows_length,
+          output_rows, output_rows_length);
+}
+
+                  
+void ecall_stake(uint8_t *input_rows, size_t input_rows_length,
+                  uint8_t **output_rows, size_t *output_rows_length) {
+  stake(input_rows, input_rows_length,
+         output_rows, output_rows_length);
 }
 
 void ecall_project(uint8_t *condition, size_t condition_length,

@@ -24,6 +24,15 @@ class SGXEnclave extends java.io.Serializable {
   @native def StartEnclave(libraryPath: String): Long
   @native def StopEnclave(enclaveId: Long): Unit
 
+  @native def Clip2Norm(eid: Long, bound: Array[Byte], input: Array[Byte]): Array[Byte]
+  @native def ClipInfNorm(eid: Long, bound: Array[Byte], input: Array[Byte]): Array[Byte]
+
+  @native def LrGradient(eid: Long, regterm: Array[Byte], theta: Array[Byte], input: Array[Byte]): Array[Byte]
+
+  @native def GaussianNoise(eid: Long, noise_para: Array[Byte], shape: Array[Byte], input: Array[Byte]): Array[Byte]
+
+  @native def Stake(eid: Long, input: Array[Byte]): Array[Byte]
+
   @native def Project(eid: Long, projectList: Array[Byte], input: Array[Byte]): Array[Byte]
 
   @native def Filter(eid: Long, condition: Array[Byte], input: Array[Byte]): Array[Byte]

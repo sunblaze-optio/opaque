@@ -35,6 +35,22 @@ import edu.berkeley.cs.rise.opaque.logical._
 
 object OpaqueOperators extends Strategy {
   def apply(plan: LogicalPlan): Seq[SparkPlan] = plan match {
+    
+    case Clip2Norm(bound, child) => 
+      Clip2NormExec(bound, planLater(child)):: Nil
+
+    case ClipInfNorm(bound, child) => 
+      ClipInfNormExec(bound, planLater(child)):: Nil
+
+    case LrGradient(regterm, theta, child) =>
+      LrGradientExec(regterm, theta, planLater(child))::Nil
+
+    case GaussianNoise(noise_para, shape, child) =>
+      GaussianNoiseExec(noise_para, shape, planLater(child))::Nil
+
+    case Stake(child) =>
+      StakeExec(planLater(child)) :: Nil
+
     case EncryptedProject(projectList, child) =>
       ObliviousProjectExec(projectList, planLater(child)) :: Nil
 

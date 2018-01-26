@@ -37,7 +37,7 @@ include_directories(SYSTEM "$ENV{SGX_SDK}/include/tlibc")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -nostdinc -fvisibility=hidden -fpie -fstack-protector")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${CMAKE_CXX_FLAGS} -nostdinc++")
-set(ENCLAVE_LINK_FLAGS "-Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-pie,-eenclave_entry -Wl,--export-dynamic -Wl,--defsym,__ImageBase=0 -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/Enclave.lds")
+set(ENCLAVE_LINK_FLAGS "-Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-pie,-eenclave_entry -Wl,--export-dynamic -Wl,--defsym,__ImageBase=0 -Wl,--gc-sections -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/Enclave.lds")
 
 add_library(enclave_trusted SHARED ${SOURCES})
 set_property(TARGET enclave_trusted PROPERTY POSITION_INDEPENDENT_CODE OFF)
@@ -51,7 +51,8 @@ find_library(TKEY_EXCHANGE_LIB sgx_tkey_exchange)
 find_library(TCRYPTO_LIB sgx_tcrypto)
 find_library(SERVICE_LIB sgx_tservice)
 find_library(SERVICE_SIM_LIB sgx_tservice_sim)
-find_library(TEST_STATIC teststatic PATHS /home/sunblaze/optio/opaque/src/enclave/Enclave)
+find_library(COMPILER_PATCH_LIB compiler-rt-patch PATHS /home/sunblaze/optio/opaque/src/enclave/Enclave)
+find_library(EMBED_RUST_LIB embed_rust PATHS /home/sunblaze/optio/opaque/src/enclave/Enclave/embed_rust/target/debug)
 
 if(NOT "$ENV{SGX_MODE}" EQUAL "HW")
   set(Trts_Library_Path "${TRTS_SIM_LIB}")
@@ -62,7 +63,7 @@ else()
 endif()
 
 target_link_libraries(enclave_trusted -Wl,--whole-archive "${Trts_Library_Path}" -Wl,--no-whole-archive -Wl,--start-group "${TSTDC_LIB}" "${TSTDCXX_LIB}"
-  "${TKEY_EXCHANGE_LIB}" "${TCRYPTO_LIB}" "${Service_Library_Path}" "${TEST_STATIC}" -Wl,--end-group)
+  "${TKEY_EXCHANGE_LIB}" "${TCRYPTO_LIB}" "${Service_Library_Path}" "${COMPILER_PATCH_LIB}" "${EMBED_RUST_LIB}"  -Wl,--end-group)
 
 add_custom_command(
   COMMAND ${SGX_ENCLAVE_SIGNER} sign -key "$ENV{SGX_SDK}/SampleCode/SampleEnclave/Enclave/Enclave_private.pem" -enclave $<TARGET_FILE:enclave_trusted> -out libenclave_trusted_signed.so -config ${CMAKE_CURRENT_SOURCE_DIR}/Enclave.config.xml

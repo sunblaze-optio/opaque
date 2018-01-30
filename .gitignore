@@ -84,3 +84,6 @@ hs_err_pid*.log
 /data/pagerank
 !/data/pagerank/PageRank256.in
 /data/disease/*.csv
+
+# Cargo
+src/enclave/Enclave/embed_rust/Cargo.lock

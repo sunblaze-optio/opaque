@@ -11,4 +11,10 @@ crate-type = ["staticlib"]
 default = []
 
 [dependencies]
-sgx_tstd = { git = "https://github.com/sunblaze-optio/rust-sgx-sdk" }
+ndarray-sgx = { git = "https://github.com/sunblaze-optio/rust-ndarray", features = ["blas", "serde-1"] }
+ndarray-linalg-sgx = { git = "https://github.com/sunblaze-optio/ndarray-linalg", features = ["openblas"] }
+serde-sgx = { git = "https://github.com/ekiden/serde" }
+serde_cbor-sgx = { git = "https://github.com/ekiden/cbor" }
+serde_derive = "1.0"
+sgx_tstd = { git = "https://github.com/ekiden/rust-sgx-sdk" }
+

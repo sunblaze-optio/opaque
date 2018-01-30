@@ -37,6 +37,8 @@ namespace std {
     }                                           \
   } while (0)
 
+#define SAMPLE_BOUND 1024
+#define FEATURE_BOUND 128
 inline int memcpy_s(void *dest,
                     size_t numberOfElements,
                     const void *src,

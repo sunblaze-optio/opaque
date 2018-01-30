@@ -3,6 +3,7 @@
 
 extern "C" {
   void hello_world();
+  void passing(double* arr, int len);
 }
 
 #ifndef STAKE_H

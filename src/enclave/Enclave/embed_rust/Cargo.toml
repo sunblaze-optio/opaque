@@ -17,4 +17,3 @@ serde-sgx = { git = "https://github.com/ekiden/serde" }
 serde_cbor-sgx = { git = "https://github.com/ekiden/cbor" }
 serde_derive = "1.0"
 sgx_tstd = { git = "https://github.com/ekiden/rust-sgx-sdk" }
-

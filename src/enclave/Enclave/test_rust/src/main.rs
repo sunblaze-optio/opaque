@@ -1,21 +1,12 @@
-#![feature(prelude_import)]
-#![no_std]
-
-#[macro_use]
-extern crate sgx_tstd as std;
-extern crate sgx_rand as rand;
+extern crate rand;
 extern crate ndarray;
-extern crate ndarray_rand_sgx as ndarray_rand;
+extern crate ndarray_rand;
 
-#[allow(unused)]
-#[prelude_import]
-use std::prelude::v1::*;
 use std::f64::consts::E;
 use ndarray::{Array, Array2, Ix2};
 use rand::distributions::Normal;
 use rand::distributions::Range;
 use ndarray_rand::RandomExt;
-
 
 /*mod mockup_linalg;
 
@@ -31,6 +22,13 @@ pub extern "C" fn hello_world() {
 #[no_mangle]
 pub extern "C" fn passing(arr: &mut [f64], len: i32) {
   arr[1] = 0.0;
+}
+
+#[no_mangle]
+pub extern "C" fn print_array(x: &Array2<f64>) {
+  for v in x.iter() {
+    println!("{}", v);
+  }
 }
 
 #[no_mangle]
@@ -98,7 +96,7 @@ pub extern "C" fn lr_gradient(features: &Array2<f64>, labels: &Array2<f64>, thet
 pub extern "C" fn dp_logistic_regression(features: &Array2<f64>, labels: &Array2<f64>, lambda: f64, learning_rate: f64, eps: f64, delta: f64) -> Array2<f64> {
   let n = features.shape()[0] as f64;
   let l: f64 = 1.0;
-  let num_iters = 100 as usize;
+  let num_iters = 1000 as usize;
   let mut theta = Array2::<f64>::zeros((features.shape()[1], 1));
   let std_dev: f64 = 4.0*l*((num_iters as f64)*(1.0/delta).ln()).sqrt()/(n*eps);
   for i in 1..num_iters { 
@@ -112,6 +110,8 @@ pub extern "C" fn dp_logistic_regression(features: &Array2<f64>, labels: &Array2
 #[no_mangle]
 pub extern "C" fn random_dataset(height: usize, width: usize) -> (Array2<f64>, Array2<f64>) {
   let theta = Array::random((width, 1), (Normal::new(0., 1.)));
+  println!("Original theta when faking the dataset:");
+  print_array(&theta);
   let features = Array::random((height, width), (Normal::new(0., 1.)));
   let exponent = -features.dot(&theta);
   let labels = scalar_divided(&scalar_add(&pointwise_exp(&exponent), 1.0), 1.0);
@@ -120,6 +120,14 @@ pub extern "C" fn random_dataset(height: usize, width: usize) -> (Array2<f64>, A
 
 #[no_mangle]
 pub extern "C" fn test_dplr() {
-  let (features, labels) = random_dataset(10, 5);
-  let theta = dp_logistic_regression(&features, &labels, 0.0, 0.1, 1.0, 0.01);
+  let (features, labels) = random_dataset(10000, 5);
+  let theta = dp_logistic_regression(&features, &labels, 0.0, 0.01, 1.0, 0.01);
+  println!("Theta got via logistic regression, should be times of the original one:");
+  print_array(&theta);
+}
+
+fn main() {
+  println!("Start...");
+  test_dplr();
+  println!("Finish...");
 }

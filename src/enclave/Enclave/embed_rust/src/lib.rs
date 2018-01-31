@@ -6,26 +6,30 @@ extern crate sgx_tstd as std;
 extern crate sgx_rand as rand;
 extern crate ndarray as ndarray;
 extern crate ndarray_rand_sgx as ndarray_rand;
-//extern crate ndarray_linalg_sgx as ndarray_linalg;
 
 #[allow(unused)]
 #[prelude_import]
 use std::prelude::v1::*;
 use std::f64::consts::E;
-//use std::error::Error;
 use ndarray::{Array, Array2, Ix2};
-//use rand::distributions::Range;
 use rand::distributions::Normal;
+use rand::distributions::Range;
 use ndarray_rand::RandomExt;
 
+
+/*mod mockup_linalg;
+
+mod gradient;
+use gradient::lr_gradient;*/
+
 #[no_mangle]
-pub extern fn hello_world() {
-   
+pub extern "C" fn hello_world() {
+   let x = 1.0_f64;
+   let y = x.powf(2.3);
 }
 
 #[no_mangle]
-// deep copy or shallow copy?
-pub extern fn passing(arr: &mut [f64], len: i32) {
+pub extern "C" fn passing(arr: &mut [f64], len: i32) {
   arr[1] = 0.0;
 }
 
@@ -99,7 +103,6 @@ pub extern "C" fn dp_logistic_regression(features: &Array2<f64>, labels: &Array2
   let std_dev: f64 = 4.0*l*((num_iters as f64)*(1.0/delta).ln()).sqrt()/(n*eps);
   for i in 1..num_iters { 
     let gradient = lr_gradient(features, labels, &theta, lambda);
-    // is multiplication of scalar and vector supported in Rust?
     let noise = Array::random(gradient.shape(), (Normal::new(0., std_dev)));
     theta = theta - learning_rate * (gradient+noise);
   }

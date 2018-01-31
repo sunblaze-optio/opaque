@@ -7,6 +7,7 @@ using namespace edu::berkeley::cs::rise::opaque;
 
 void stake(uint8_t *input_rows, size_t input_rows_length,
             uint8_t **output_rows, size_t *output_rows_length) {
+
   test_dplr();
   flatbuffers::FlatBufferBuilder builder;
 
@@ -20,7 +21,6 @@ void stake(uint8_t *input_rows, size_t input_rows_length,
     for(int i = 0; i < row_len; ++i) {
       tmp[i] = static_cast<const tuix::DoubleField*>(row->field_values()->Get(i)->value())->value();
     }
-    passing(tmp, row_len);
     std::vector<flatbuffers::Offset<tuix::Field> > tmp_row;
     for(int i = 0; i < row_len; ++i) {
       tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, tmp[i]).Union()));

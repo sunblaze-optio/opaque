@@ -1,6 +1,6 @@
 use rand::distributions::Range;
 use rand::distributions::Normal;
-use ndarray::Array;
+use ndarray::{Array, Ix2};
 use ndarray_rand::RandomExt;
 use ndarray_rand::F32;
 

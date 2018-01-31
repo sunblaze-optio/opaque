@@ -87,3 +87,4 @@ hs_err_pid*.log
 
 # Cargo
 src/enclave/Enclave/embed_rust/Cargo.lock
+src/enclave/Enclave/dpml-rust

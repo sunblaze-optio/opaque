@@ -3,19 +3,20 @@
 
 #[macro_use]
 extern crate sgx_tstd as std;
-
+extern crate sgx_rand as rand;
 extern crate ndarray as ndarray;
-extern crate ndarray_linalg_sgx as ndarray_linalg;
+extern crate ndarray_rand_sgx as ndarray_rand;
+//extern crate ndarray_linalg_sgx as ndarray_linalg;
 
 #[allow(unused)]
 #[prelude_import]
 use std::prelude::v1::*;
-
-//mod clip;
-//mod gradient;
-//mod noise;
-
-//use gradient::hubersvm_gradient;
+use std::f64::consts::E;
+//use std::error::Error;
+use ndarray::{Array, Array2, Ix2};
+//use rand::distributions::Range;
+use rand::distributions::Normal;
+use ndarray_rand::RandomExt;
 
 #[no_mangle]
 pub extern fn hello_world() {
@@ -26,8 +27,96 @@ pub extern fn hello_world() {
 // deep copy or shallow copy?
 pub extern fn passing(arr: &mut [f64], len: i32) {
   arr[1] = 0.0;
-  /*for i in 0..len {
-    let j = i as usize;
-    arr[j] = 1.0;
-  }*/
+}
+
+#[no_mangle]
+pub extern "C" fn scalar_add(x: &Array2<f64>, s: f64) -> Array2<f64> {
+  let v: Vec<f64> = x.iter().map(|i| i.clone()+s).collect();
+  let result = Array::from_shape_vec(x.shape(), v).unwrap();
+  return result.into_dimensionality::<Ix2>().unwrap();
+}
+
+
+#[no_mangle]
+pub extern "C" fn scalar_subtract(x: &Array2<f64>, s:f64) -> Array2<f64> {
+  let v: Vec<f64> = x.iter().map(|i| i.clone()-s).collect();
+  let result = Array::from_shape_vec(x.shape(), v).unwrap();
+  return result.into_dimensionality::<Ix2>().unwrap();
+}
+
+#[no_mangle]
+pub extern "C" fn scalar_subtracted(x: &Array2<f64>, s:f64) -> Array2<f64> {
+  let v: Vec<f64> = x.iter().map(|i| s-i.clone()).collect();
+  let result = Array::from_shape_vec(x.shape(), v).unwrap();
+  return result.into_dimensionality::<Ix2>().unwrap();
+}
+
+
+#[no_mangle]
+pub extern "C" fn scalar_multiply(x: &Array2<f64>, s:f64) -> Array2<f64> {
+  let v: Vec<f64> = x.iter().map(|i| i.clone()*s).collect();
+  let result = Array::from_shape_vec(x.shape(), v).unwrap();
+  return result.into_dimensionality::<Ix2>().unwrap();
+}
+
+#[no_mangle]
+pub extern "C" fn scalar_divide(x: &Array2<f64>, s:f64) -> Array2<f64> {
+  let v: Vec<f64> = x.iter().map(|i| i.clone()/s).collect();
+  let result = Array::from_shape_vec(x.shape(), v).unwrap();
+  return result.into_dimensionality::<Ix2>().unwrap();
+}
+
+#[no_mangle]
+pub extern "C" fn scalar_divided(x: &Array2<f64>, s:f64) -> Array2<f64> {
+  let v: Vec<f64> = x.iter().map(|i| s/i.clone()).collect();
+  let result = Array::from_shape_vec(x.shape(), v).unwrap();
+  return result.into_dimensionality::<Ix2>().unwrap();
+}
+
+#[no_mangle]
+pub extern "C" fn pointwise_exp(x: &Array2<f64>) -> Array2<f64> {
+  let v: Vec<f64> = x.iter().map(|i| E.powf(i.clone())).collect();
+  let result = Array::from_shape_vec(x.shape(), v).unwrap();
+  return result.into_dimensionality::<Ix2>().unwrap();
+}
+
+#[no_mangle]
+pub extern "C" fn lr_gradient(features: &Array2<f64>, labels: &Array2<f64>, theta: &Array2<f64>, lambda: f64) -> Array2<f64> {
+  let height = features.shape()[0] as f64;
+  let exponent = labels * &(features.dot(theta));
+  let gradient_loss = scalar_divide(&(-((features.t()).dot(&(labels/&(scalar_add(&pointwise_exp(&exponent), 1.0_f64)))))), height);
+  let regularization = scalar_multiply(theta, lambda);
+  let result = gradient_loss + regularization;
+  return result;
+}
+
+#[no_mangle]
+pub extern "C" fn dp_logistic_regression(features: &Array2<f64>, labels: &Array2<f64>, lambda: f64, learning_rate: f64, eps: f64, delta: f64) -> Array2<f64> {
+  let n = features.shape()[0] as f64;
+  let l: f64 = 1.0;
+  let num_iters = 100 as usize;
+  let mut theta = Array2::<f64>::zeros((features.shape()[1], 1));
+  let std_dev: f64 = 4.0*l*((num_iters as f64)*(1.0/delta).ln()).sqrt()/(n*eps);
+  for i in 1..num_iters { 
+    let gradient = lr_gradient(features, labels, &theta, lambda);
+    // is multiplication of scalar and vector supported in Rust?
+    let noise = Array::random(gradient.shape(), (Normal::new(0., std_dev)));
+    theta = theta - learning_rate * (gradient+noise);
+  }
+  return theta;
+}
+
+#[no_mangle]
+pub extern "C" fn random_dataset(height: usize, width: usize) -> (Array2<f64>, Array2<f64>) {
+  let theta = Array::random((width, 1), (Normal::new(0., 1.)));
+  let features = Array::random((height, width), (Normal::new(0., 1.)));
+  let exponent = -features.dot(&theta);
+  let labels = scalar_divided(&scalar_add(&pointwise_exp(&exponent), 1.0), 1.0);
+  return (features, labels);
+}
+
+#[no_mangle]
+pub extern "C" fn test_dplr() {
+  let (features, labels) = random_dataset(10, 5);
+  let theta = dp_logistic_regression(&features, &labels, 0.0, 0.1, 1.0, 0.01);
 }

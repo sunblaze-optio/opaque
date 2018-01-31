@@ -7,7 +7,7 @@ using namespace edu::berkeley::cs::rise::opaque;
 
 void stake(uint8_t *input_rows, size_t input_rows_length,
             uint8_t **output_rows, size_t *output_rows_length) {
-
+  test_dplr();
   flatbuffers::FlatBufferBuilder builder;
 
   EncryptedBlocksToRowReader r(input_rows, input_rows_length);

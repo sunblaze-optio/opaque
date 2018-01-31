@@ -1,23 +1,23 @@
+use std::f64::consts::E;
 use std::error::Error;
+use ndarray::{Array, Array1, Array2, Ix2};
 
-use ndarray::{Array1, Array2};
-//use ndarray_linalg::Inverse;
-
-pub extern "C" fn transpose(x: &Array2<f64>) -> &Array2<f64> {
-  /*let height = x.shape()[0] as i32;
-  let width = x.shape()[1] as i32;
-  for
-    for
-      tmp
-      tmp = x[[i, j]]
-      x[[i, j]] = x[[j, i]];
-      x[[j,i]] = tmp;*/
-  return x;
+pub extern "C" fn scalar_add(x: &Array2<f64>, s: f64) -> Array2<f64> {
+  let v: Vec<f64> = x.iter().map(|i| i.clone()+s).collect();
+  let result = Array::from_shape_vec(x.shape(), v).unwrap();
+  return result.into_dimensionality::<Ix2>().unwrap();
 }
 
-pub extern "C" fn pointwise_exp(x: &Array2<f64>) -> &Array2<f64> {
-  /*let width = x.shape()[0] as i32;
-  for
-    x[i] = E.powf(x[i])*/
-  return x;
+pub extern "C" fn scalar_divide(x: &Array2<f64>, s:f64) -> Array2<f64> {
+  let v: Vec<f64> = x.iter().map(|i| i.clone()/s).collect();
+  let result = Array::from_shape_vec(x.shape(), v).unwrap();
+  return result.into_dimensionality::<Ix2>().unwrap();
+
+}
+
+
+pub extern "C" fn pointwise_exp(x: &Array2<f64>) -> Array2<f64> {
+  let v: Vec<f64> = x.iter().map(|i| E.powf(i.clone())).collect();
+  let result = Array::from_shape_vec(x.shape(), v).unwrap();
+  return result.into_dimensionality::<Ix2>().unwrap();
 }

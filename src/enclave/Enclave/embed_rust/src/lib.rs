@@ -3,7 +3,9 @@
 
 #[macro_use]
 extern crate sgx_tstd as std;
+extern crate sgx_rand as rand;
 extern crate ndarray;
+extern crate ndarray_rand_sgx as ndarray_rand;
 //extern crate rand;
 //extern crate ndarray_linalg_sgx as ndarray_linalg;
 
@@ -22,8 +24,8 @@ mod mockup_linalg;
 mod gradient;
 use gradient::lr_gradient;
 
-//mod noise;
-//use noise::gaussian_noise;
+mod noise;
+use noise::gaussian_noise;
 
 #[no_mangle]
 pub extern "C" fn hello_world() {

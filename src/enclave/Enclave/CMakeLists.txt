@@ -52,7 +52,7 @@ find_library(TCRYPTO_LIB sgx_tcrypto)
 find_library(SERVICE_LIB sgx_tservice)
 find_library(SERVICE_SIM_LIB sgx_tservice_sim)
 find_library(COMPILER_PATCH_LIB compiler-rt-patch PATHS /home/sunblaze/optio/opaque/src/enclave/Enclave)
-find_library(EMBED_RUST_LIB embed_rust PATHS /home/sunblaze/optio/opaque/src/enclave/Enclave/embed_rust/target/debug)
+find_library(EMBED_RUST_LIB embed_rust PATHS /home/sunblaze/optio/opaque/src/enclave/Enclave)
 
 if(NOT "$ENV{SGX_MODE}" EQUAL "HW")
   set(Trts_Library_Path "${TRTS_SIM_LIB}")

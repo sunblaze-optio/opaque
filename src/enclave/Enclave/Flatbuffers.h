@@ -7,8 +7,6 @@
 #include "Expr_generated.h"
 #include "Rows_generated.h"
 #include "operators_generated.h"
-#include "Hyper_generated.h"
-#include "Model_generated.h"
 
 #include "Crypto.h"
 #include "common.h"
@@ -420,5 +418,7 @@ private:
 
 void print(const tuix::Row *in);
 void print(const tuix::Field *field);
+/*int deserializedouble(EncryptedBlocksToRowReader &r, float* result);
+int serializedouble(FlatbuffersRowWriter &w, float* result);*/
 
 #endif

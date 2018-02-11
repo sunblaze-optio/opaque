@@ -11,7 +11,7 @@ void clip2norm(uint8_t *bound, size_t bound_length,
             uint8_t **output_rows, size_t *output_rows_length) {
 
   flatbuffers::Verifier v(bound, bound_length);
-  check(v.VerifyBuffer<tuix::Bound>(nullptr),
+  check(v.VerifyBuffer<tuix::DoubleField>(nullptr),
         "Corrupted Bound %p of length %d\n", bound, bound_length);
 
   // const tuix::Bound* clip_bound = flatbuffers::GetRoot<tuix::Bound>(bound);
@@ -39,10 +39,10 @@ void clipinfnorm(uint8_t *bound, size_t bound_length,
 
   flatbuffers::FlatBufferBuilder builder;
   flatbuffers::Verifier v(bound, bound_length);
-  check(v.VerifyBuffer<tuix::Bound>(nullptr),
+  check(v.VerifyBuffer<tuix::DoubleField>(nullptr),
         "Corrupted Bound %p of length %d\n", bound, bound_length);
 
-  const tuix::Bound* clip_bound = flatbuffers::GetRoot<tuix::Bound>(bound);
+  const tuix::DoubleField* clip_bound = flatbuffers::GetRoot<tuix::DoubleField>(bound);
   const double bound_value = clip_bound->value();
 
   EncryptedBlocksToRowReader r(input_rows, input_rows_length);
@@ -53,8 +53,6 @@ void clipinfnorm(uint8_t *bound, size_t bound_length,
     int row_len = row->field_values()->Length();
     std::vector<flatbuffers::Offset<tuix::Field>> tmp_row;
     for(int i = 0; i < row_len; ++i) {
-      // the value should be double, the client should make sure of that
-      // Some check operation here? See filter.
       double value = static_cast<const tuix::DoubleField*>(row->field_values()->Get(i)->value())->value();
       if(value > bound_value) {
         tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, bound_value).Union()));

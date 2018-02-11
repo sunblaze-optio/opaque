@@ -760,7 +760,7 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
   return ret;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LrGradient(
+/*JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LrGradient(
   JNIEnv *env, jobject obj, jlong eid, jbyteArray regterm, jbyteArray theta, jbyteArray input_rows) {
   (void)obj;
 
@@ -856,7 +856,7 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
   free(output_rows);
 
   return ret;
-}
+}*/
 
 JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Project(
   JNIEnv *env, jobject obj, jlong eid, jbyteArray project_list, jbyteArray input_rows) {

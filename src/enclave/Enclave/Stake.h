@@ -1,11 +1,11 @@
 #include <cstddef>
 #include <cstdint>
 
-extern "C" {
+/*extern "C" {
   void hello_world();
   void passing(double* arr, int len);
   void test_dplr();
-}
+}*/
 
 #ifndef STAKE_H
 #define STAKE_H

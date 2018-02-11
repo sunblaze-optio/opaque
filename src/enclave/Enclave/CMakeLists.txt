@@ -6,10 +6,7 @@ set(SOURCES
   Aggregate.cpp
   Crypto.cpp
   Enclave.cpp
-  Stake.cpp
   Clip.cpp
-  Gradient.cpp
-  Noise.cpp
   Filter.cpp
   Flatbuffers.cpp
   Join.cpp
@@ -52,7 +49,7 @@ find_library(TCRYPTO_LIB sgx_tcrypto)
 find_library(SERVICE_LIB sgx_tservice)
 find_library(SERVICE_SIM_LIB sgx_tservice_sim)
 find_library(COMPILER_PATCH_LIB compiler-rt-patch PATHS /home/sunblaze/optio/opaque/src/enclave/Enclave)
-find_library(EMBED_RUST_LIB embed_rust PATHS /home/sunblaze/optio/opaque/src/enclave/Enclave/embed_rust/target/debug)
+find_library(DPML_RUST_LIB dpml_rust PATHS /home/sunblaze/optio/opaque/src/enclave/Enclave/dpml-rust/target/debug)
 
 if(NOT "$ENV{SGX_MODE}" EQUAL "HW")
   set(Trts_Library_Path "${TRTS_SIM_LIB}")
@@ -63,7 +60,7 @@ else()
 endif()
 
 target_link_libraries(enclave_trusted -Wl,--whole-archive "${Trts_Library_Path}" -Wl,--no-whole-archive -Wl,--start-group "${TSTDC_LIB}" "${TSTDCXX_LIB}"
-  "${TKEY_EXCHANGE_LIB}" "${TCRYPTO_LIB}" "${Service_Library_Path}" "${COMPILER_PATCH_LIB}" "${EMBED_RUST_LIB}"  -Wl,--end-group)
+  "${TKEY_EXCHANGE_LIB}" "${TCRYPTO_LIB}" "${Service_Library_Path}" "${COMPILER_PATCH_LIB}" "${DPML_RUST_LIB}"  -Wl,--end-group)
 
 add_custom_command(
   COMMAND ${SGX_ENCLAVE_SIGNER} sign -key "$ENV{SGX_SDK}/SampleCode/SampleEnclave/Enclave/Enclave_private.pem" -enclave $<TARGET_FILE:enclave_trusted> -out libenclave_trusted_signed.so -config ${CMAKE_CURRENT_SOURCE_DIR}/Enclave.config.xml

@@ -90,3 +90,4 @@ src/enclave/Enclave/embed_rust/Cargo.lock
 src/enclave/Enclave/test_rust/Cargo.lock
 src/enclave/Enclave/embed_rust/target/
 src/enclave/Enclave/test_rust/target/
+src/enclave/Enclave/embed_rust_old

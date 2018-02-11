@@ -619,7 +619,7 @@ object Utils {
     }
   }
 
-  def serializeNoisePara(value: Double): Array[Byte] = {
+/*  def serializeNoisePara(value: Double): Array[Byte] = {
     val builder = new FlatBufferBuilder
     builder.finish(
       tuix.NoisePara.createNoisePara(
@@ -671,6 +671,22 @@ object Utils {
         builder,
         value))
     builder.sizedByteArray()
+  }*/
+
+  def serializeField(value: Any, dataType: DataType): Array[Byte] = {
+    val builder = new FlatBufferBuilder
+    (value, dataType) match {
+      case (x: Double, DoubleType) => {
+        builder.finish(
+          tuix.DoubleField.createDoubleField(
+            builder,
+            x
+          )
+        )
+        builder.sizedByteArray()
+      }
+      //case
+    }
   }
 
   def serializeFilterExpression(condition: Expression, input: Seq[Attribute]): Array[Byte] = {

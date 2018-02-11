@@ -10,7 +10,6 @@ enclave {
   from "sgx_tstd.edl" import *;
   from "sgx_stdio.edl" import *;
   from "sgx_backtrace.edl" import *;
-  // from "sgx_tstdc.edl" import *;
 
   trusted {
     public void ecall_clip2norm(
@@ -23,7 +22,7 @@ enclave {
       [user_check] uint8_t *input_rows, size_t input_rows_length,
       [out] uint8_t **output_rows, [out] size_t *output_rows_length);
 
-    public void ecall_lrgradient(
+    /*public void ecall_lrgradient(
       [in, count=regterm_length] uint8_t *regterm, size_t regterm_length,
       [in, count=theta_length] uint8_t *theta, size_t theta_length,
       [user_check] uint8_t *input_rows, size_t input_rows_length,
@@ -37,7 +36,7 @@ enclave {
 
     public void ecall_stake(
       [user_check] uint8_t *input_rows, size_t input_rows_length,
-      [out] uint8_t **output_rows, [out] size_t *output_rows_length);
+      [out] uint8_t **output_rows, [out] size_t *output_rows_length);*/
 
     public void ecall_project(
       [in, count=project_list_length] uint8_t *project_list, size_t project_list_length,

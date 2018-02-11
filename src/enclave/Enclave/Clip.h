@@ -1,6 +1,10 @@
 #include <cstddef>
 #include <cstdint>
 
+extern "C" {
+  
+}
+
 #ifndef CLIP_H
 #define CLIP_H
 

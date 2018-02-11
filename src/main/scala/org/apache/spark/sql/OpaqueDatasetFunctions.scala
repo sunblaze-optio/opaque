@@ -22,10 +22,10 @@ import edu.berkeley.cs.rise.opaque.logical.Encrypt
 import edu.berkeley.cs.rise.opaque.logical.Stake
 import edu.berkeley.cs.rise.opaque.logical.Clip2Norm
 import edu.berkeley.cs.rise.opaque.logical.ClipInfNorm
-import edu.berkeley.cs.rise.opaque.logical.LrGradient
+//import edu.berkeley.cs.rise.opaque.logical.LrGradient
 //import edu.berkeley.cs.rise.opaque.logical.HuberSvmGradient
 //import edu.berkeley.cs.rise.opaque.logical.LaplaceNoise
-import edu.berkeley.cs.rise.opaque.logical.GaussianNoise
+//import edu.berkeley.cs.rise.opaque.logical.GaussianNoise
 
 class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
 
@@ -68,7 +68,7 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
   }
 
   // gradient of different loss functions
-  def lr_gradient(regterm: Double, theta: Seq[Double]): DataFrame = {
+  /*def lr_gradient(regterm: Double, theta: Seq[Double]): DataFrame = {
     if(ds.logicalPlan.isInstanceOf[OpaqueOperator]){
       return Dataset.ofRows(ds.sparkSession, LrGradient(regterm, theta, ds.logicalPlan.asInstanceOf[OpaqueOperator]));
     }
@@ -76,7 +76,7 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
       println("Please encrypt the DataFrame first!")
       return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
     }
-  }
+  }*/
 
   /*def hubersvm_gradient(regterm: Double, theta: Seq[Double]): DataFrame = {
     Dataset.ofRows(ds.sparkSession, HuberSvmGradient(regterm, theta, ds.logicalPlan));
@@ -88,7 +88,7 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
     Dataset.ofRows(ds.sparkSession, LaplaceNoise(noise_para, shape))
   }*/
 
-  def gaussian_noise(noise_para: Double, shape: Int): DataFrame = {
+  /*def gaussian_noise(noise_para: Double, shape: Int): DataFrame = {
     if(ds.logicalPlan.isInstanceOf[OpaqueOperator]){
       return Dataset.ofRows(ds.sparkSession, GaussianNoise(noise_para, shape, ds.logicalPlan.asInstanceOf[OpaqueOperator]));
     }
@@ -96,5 +96,5 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
       println("Please encrypt the DataFrame first!")
       return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
     }
-  }
+  }*/
 }

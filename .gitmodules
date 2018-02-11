@@ -1,0 +1,3 @@
+[submodule "src/enclave/Enclave/dpml-rust"]
+	path = src/enclave/Enclave/dpml-rust
+	url = git@github.com:sunblaze-ucb/dpml-rust.git

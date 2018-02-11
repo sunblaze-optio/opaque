@@ -66,9 +66,9 @@ void print(const tuix::Field *field) {
 
 }
 
-void extracy_dataset(EncryptedBlocksToRowReader &r, float* features, float* labels, int &attribute_num, int &sample_num) {
-  feature_ptr = 0;
-  label_ptr = 0;
+void extract_dataset(EncryptedBlocksToRowReader &r, float* features, float* labels, int &attribute_num, int &sample_num) {
+  int feature_ptr = 0;
+  int label_ptr = 0;
   sample_num = 0;
   while(r.has_next()) {
     ++sample_num;
@@ -79,12 +79,11 @@ void extracy_dataset(EncryptedBlocksToRowReader &r, float* features, float* labe
       if(i == attribute_num)
         features[feature_ptr++] = value;
       else
-        labels[labe_ptr++] = value;
+        labels[label_ptr++] = value;
     }
   }
 }
 
-void 
 template<>
 flatbuffers::Offset<tuix::Row> flatbuffers_copy(
   const tuix::Row *row, flatbuffers::FlatBufferBuilder& builder, bool force_null) {

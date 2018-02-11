@@ -48,11 +48,13 @@ void clipinfnorm(uint8_t *bound, size_t bound_length,
   EncryptedBlocksToRowReader r(input_rows, input_rows_length);
   FlatbuffersRowWriter w;
 
-  float features[1000000];
+  double features[1000000];
   int attribute_num;
   int sample_num; 
-  float labels[10000];
+  double labels[10000];
   extract_dataset(r, features, labels, attribute_num, sample_num);
+
+  clip_linf(bound_value, features, labels, attribute_num, sample_num, features);
 
   while (r.has_next()) {
     const tuix::Row *row = r.next();

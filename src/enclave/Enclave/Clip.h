@@ -2,7 +2,7 @@
 #include <cstdint>
 
 extern "C" {
-  
+  void clip_linf(double, double*, double*, int, int, double*);  
 }
 
 #ifndef CLIP_H

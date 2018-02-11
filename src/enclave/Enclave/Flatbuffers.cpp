@@ -66,7 +66,7 @@ void print(const tuix::Field *field) {
 
 }
 
-void extract_dataset(EncryptedBlocksToRowReader &r, float* features, float* labels, int &attribute_num, int &sample_num) {
+void extract_dataset(EncryptedBlocksToRowReader &r, double* features, double* labels, int &attribute_num, int &sample_num) {
   int feature_ptr = 0;
   int label_ptr = 0;
   sample_num = 0;

@@ -66,6 +66,24 @@ void print(const tuix::Field *field) {
 
 }
 
+void extracy_dataset(EncryptedBlocksToRowReader &r, float* features, float* labels, int &attribute_num, int &sample_num) {
+  feature_ptr = 0;
+  label_ptr = 0;
+  sample_num = 0;
+  while(r.has_next()) {
+    ++sample_num;
+    const tuix::Row *row = r.next();
+    attribute_num = row->field_values()->Length()-1;
+    for(int i = 0; i <= attribute_num; ++i) {
+      double value = static_cast<const tuix::DoubleField*>(row->field_values()->Get(i)->value())->value();
+      if(i == attribute_num)
+        features[feature_ptr++] = value;
+      else
+        labels[labe_ptr++] = value;
+    }
+  }
+}
+
 void 
 template<>
 flatbuffers::Offset<tuix::Row> flatbuffers_copy(

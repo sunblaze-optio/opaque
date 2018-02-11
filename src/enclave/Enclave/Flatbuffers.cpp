@@ -66,6 +66,7 @@ void print(const tuix::Field *field) {
 
 }
 
+void 
 template<>
 flatbuffers::Offset<tuix::Row> flatbuffers_copy(
   const tuix::Row *row, flatbuffers::FlatBufferBuilder& builder, bool force_null) {

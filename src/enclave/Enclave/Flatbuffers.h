@@ -418,7 +418,7 @@ private:
 
 void print(const tuix::Row *in);
 void print(const tuix::Field *field);
-/*int deserializedouble(EncryptedBlocksToRowReader &r, float* result);
-int serializedouble(FlatbuffersRowWriter &w, float* result);*/
+void extract_dataset(EncryptedBlocksToRowReader &r, float* features, float* labels, int* attribute_num, int* sample_num);
+//int serialize_dataset(FlatbuffersRowWriter &w, float* result);
 
 #endif

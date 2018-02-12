@@ -56,7 +56,8 @@ void clipinfnorm(uint8_t *bound, size_t bound_length,
 
   clip_linf(bound_value, features, labels, attribute_num, sample_num, features);
 
-  for(int i = 0; i < sample_num; ++i) {
+  serialize_dataset(builder, w, features, labels, attribute_num, sample_num);
+  /*for(int i = 0; i < sample_num; ++i) {
     std::vector<flatbuffers::Offset<tuix::Field>> tmp_row;
     for(int j = 0; j < attribute_num; ++j) {
       tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, features[i*attribute_num+i+j]).Union()));
@@ -64,7 +65,7 @@ void clipinfnorm(uint8_t *bound, size_t bound_length,
     tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, labels[i]).Union()));
     const tuix::Row *clipped_row = flatbuffers::GetTemporaryPointer<tuix::Row>(builder, tuix::CreateRow(builder, builder.CreateVector(tmp_row)));
     w.write(clipped_row);
-  }
+  }*/
   /*while (r.has_next()) {
     const tuix::Row *row = r.next();
     int row_len = row->field_values()->Length();

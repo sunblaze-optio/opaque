@@ -84,6 +84,20 @@ void extract_dataset(EncryptedBlocksToRowReader &r, double* features, double* la
   }
 }
 
+void serialize_dataset(flatbuffers::FlatBufferBuilder &builder, FlatbuffersRowWriter &w, double* features, double* labels, int attribute_num, int sample_num) {
+  for(int i = 0; i < sample_num; ++i) {
+    std::vector<flatbuffers::Offset<tuix::Field>> tmp_row;
+    for(int j = 0; j < attribute_num; ++j) {
+      tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, features[i*attribute_num+i+j]).Union()));
+    }
+    tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, labels[i]).Union()));
+    const tuix::Row *clipped_row = flatbuffers::GetTemporaryPointer<tuix::Row>(builder, tuix::CreateRow(builder, builder.CreateVector(tmp_row)));
+    w.write(clipped_row);
+  } 
+}
+
+//void serialize_vector(FlatbuffersRowWriter &w, double* result, int len);
+
 template<>
 flatbuffers::Offset<tuix::Row> flatbuffers_copy(
   const tuix::Row *row, flatbuffers::FlatBufferBuilder& builder, bool force_null) {

@@ -76,7 +76,7 @@ void extract_dataset(EncryptedBlocksToRowReader &r, double* features, double* la
     attribute_num = row->field_values()->Length()-1;
     for(int i = 0; i <= attribute_num; ++i) {
       double value = static_cast<const tuix::DoubleField*>(row->field_values()->Get(i)->value())->value();
-      if(i == attribute_num)
+      if(i != attribute_num)
         features[feature_ptr++] = value;
       else
         labels[label_ptr++] = value;

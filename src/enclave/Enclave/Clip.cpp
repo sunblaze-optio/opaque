@@ -6,6 +6,10 @@
 
 using namespace edu::berkeley::cs::rise::opaque;
 
+/*double FEATURES[1024];
+double LABELS[128];
+double RESULT[1024];*/
+
 void clip2norm(uint8_t *bound, size_t bound_length,
             uint8_t *input_rows, size_t input_rows_length,
             uint8_t **output_rows, size_t *output_rows_length) {
@@ -44,19 +48,24 @@ void clipinfnorm(uint8_t *bound, size_t bound_length,
 
   const tuix::DoubleField* clip_bound = flatbuffers::GetRoot<tuix::DoubleField>(bound);
   const double bound_value = clip_bound->value();
+  double a = bound_value;
+  a = a+1;
 
   EncryptedBlocksToRowReader r(input_rows, input_rows_length);
   FlatbuffersRowWriter w;
 
-  double features[1000000];
+  double features[1024];
   int attribute_num;
   int sample_num; 
-  double labels[10000];
+  double labels[128];
+  double result[1024];
+
   extract_dataset(r, features, labels, attribute_num, sample_num);
 
-  clip_linf(bound_value, features, labels, attribute_num, sample_num, features);
+  //passing(RESULT);
+  clip_linf(bound_value, features, labels, attribute_num, sample_num, result);
 
-  serialize_dataset(builder, w, features, labels, attribute_num, sample_num);
+  serialize_dataset(builder, w, result, labels, attribute_num, sample_num);
   /*for(int i = 0; i < sample_num; ++i) {
     std::vector<flatbuffers::Offset<tuix::Field>> tmp_row;
     for(int j = 0; j < attribute_num; ++j) {

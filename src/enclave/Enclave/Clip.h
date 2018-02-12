@@ -2,6 +2,7 @@
 #include <cstdint>
 
 extern "C" {
+  void passing(double*);
   void clip_linf(double, double*, double*, int, int, double*);  
 }
 

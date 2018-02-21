@@ -27,11 +27,16 @@ class SGXEnclave extends java.io.Serializable {
   @native def Clip2Norm(eid: Long, bound: Array[Byte], input: Array[Byte]): Array[Byte]
   @native def ClipInfNorm(eid: Long, bound: Array[Byte], input: Array[Byte]): Array[Byte]
 
-/*  @native def LrGradient(eid: Long, regterm: Array[Byte], theta: Array[Byte], input: Array[Byte]): Array[Byte]
+  @native def LrGradient(eid: Long, regterm: Array[Byte], theta: Array[Byte], input: Array[Byte]): Array[Byte]
 
-  @native def GaussianNoise(eid: Long, noise_para: Array[Byte], shape: Array[Byte], input: Array[Byte]): Array[Byte]
+  @native def AddLaplaceNoise(eid: Long, noise_para: Array[Byte], input: Array[Byte]): Array[Byte]
+  @native def AddGaussianNoise(eid: Long, noise_para: Array[Byte], input: Array[Byte]): Array[Byte]
 
-  @native def Stake(eid: Long, input: Array[Byte]): Array[Byte]*/
+  @native def LogisticRegression(eid: Long, regterm: Array[Byte], input: Array[Byte]): Array[Byte]
+
+  @native def DPLogisticRegression(eid: Long, regterm: Array[Byte], eps: Array[Byte], delta: Array[Byte], input: Array[Byte]): Array[Byte]
+
+  @native def Stake(eid: Long, input: Array[Byte]): Array[Byte]
 
   @native def Project(eid: Long, projectList: Array[Byte], input: Array[Byte]): Array[Byte]
 

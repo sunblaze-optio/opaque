@@ -760,7 +760,7 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
   return ret;
 }
 
-/*JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LrGradient(
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LrGradient(
   JNIEnv *env, jobject obj, jlong eid, jbyteArray regterm, jbyteArray theta, jbyteArray input_rows) {
   (void)obj;
 
@@ -796,8 +796,8 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
   return ret;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_GaussianNoise(
-  JNIEnv *env, jobject obj, jlong eid, jbyteArray noise_para, jbyteArray shape, jbyteArray input_rows) {
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_AddLaplaceNoise(
+  JNIEnv *env, jobject obj, jlong eid, jbyteArray noise_para, jbyteArray input_rows) {
   (void)obj;
 
   jboolean if_copy;
@@ -805,19 +805,15 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
   uint32_t noise_para_length = (uint32_t) env->GetArrayLength(noise_para);
   uint8_t *noise_para_ptr = (uint8_t *) env->GetByteArrayElements(noise_para, &if_copy);
 
-  uint32_t shape_length = (uint32_t) env->GetArrayLength(shape);
-  uint8_t *shape_ptr = (uint8_t *) env->GetByteArrayElements(shape, &if_copy);
-
   uint32_t input_rows_length = (uint32_t) env->GetArrayLength(input_rows);
   uint8_t *input_rows_ptr = (uint8_t *) env->GetByteArrayElements(input_rows, &if_copy);
 
   uint8_t *output_rows;
   size_t output_rows_length;
 
-  sgx_check("GaussianNoise",
-            ecall_gaussiannoise(
+  sgx_check("AddLaplaceNoise",
+            ecall_addlaplacenoise(
               eid, noise_para_ptr, noise_para_length,
-              shape_ptr, shape_length,
               input_rows_ptr, input_rows_length,
               &output_rows, &output_rows_length));
 
@@ -831,6 +827,100 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
 
   return ret;
 }
+
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_AddGaussianNoise(  JNIEnv *env, jobject obj, jlong eid, jbyteArray noise_para, jbyteArray input_rows) {
+  (void)obj;
+
+  jboolean if_copy;
+
+  uint32_t noise_para_length = (uint32_t) env->GetArrayLength(noise_para);
+  uint8_t *noise_para_ptr = (uint8_t *) env->GetByteArrayElements(noise_para, &if_copy);
+
+  uint32_t input_rows_length = (uint32_t) env->GetArrayLength(input_rows);
+  uint8_t *input_rows_ptr = (uint8_t *) env->GetByteArrayElements(input_rows, &if_copy);
+
+  uint8_t *output_rows;
+  size_t output_rows_length;
+
+  sgx_check("AddGaussianNoise",
+            ecall_addgaussiannoise(
+              eid, noise_para_ptr, noise_para_length,
+              input_rows_ptr, input_rows_length,
+              &output_rows, &output_rows_length));
+
+  env->ReleaseByteArrayElements(noise_para, (jbyte *) noise_para_ptr, 0);
+  env->ReleaseByteArrayElements(shape, (jbyte *) shape_ptr, 0);
+  env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
+
+  jbyteArray ret = env->NewByteArray(output_rows_length);
+  env->SetByteArrayRegion(ret, 0, output_rows_length, (jbyte *) output_rows);
+  free(output_rows);
+
+  return ret;
+}
+
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LogisticRegression(  JNIEnv *env, jobject obj, jlong eid, jbyteArray regterm, jbyteArray input_rows) {
+  (void)obj;
+
+  jboolean if_copy;
+
+  uint32_t regterm_length = (uint32_t) env->GetArrayLength(regterm);
+  uint8_t *regterm_ptr = (uint8_t *) env->GetByteArrayElements(regterm, &if_copy);
+
+  uint32_t input_rows_length = (uint32_t) env->GetArrayLength(input_rows);
+  uint8_t *input_rows_ptr = (uint8_t *) env->GetByteArrayElements(input_rows, &if_copy);
+
+  uint8_t *output_rows;
+  size_t output_rows_length;
+
+  sgx_check("LogisticRegression",
+            ecall_logisticregression(
+              eid, regterm_ptr, regterm_length,
+              input_rows_ptr, input_rows_length,
+              &output_rows, &output_rows_length));
+
+  env->ReleaseByteArrayElements(noise_para, (jbyte *) noise_para_ptr, 0);
+  env->ReleaseByteArrayElements(shape, (jbyte *) shape_ptr, 0);
+  env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
+
+  jbyteArray ret = env->NewByteArray(output_rows_length);
+  env->SetByteArrayRegion(ret, 0, output_rows_length, (jbyte *) output_rows);
+  free(output_rows);
+
+  return ret;
+}
+
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LogisticRegression(  JNIEnv *env, jobject obj, jlong eid, jbyteArray regterm, jbyteArray input_rows) {
+  (void)obj;
+
+  jboolean if_copy;
+
+  uint32_t regterm_length = (uint32_t) env->GetArrayLength(regterm);
+  uint8_t *regterm_ptr = (uint8_t *) env->GetByteArrayElements(regterm, &if_copy);
+
+  uint32_t input_rows_length = (uint32_t) env->GetArrayLength(input_rows);
+  uint8_t *input_rows_ptr = (uint8_t *) env->GetByteArrayElements(input_rows, &if_copy);
+
+  uint8_t *output_rows;
+  size_t output_rows_length;
+
+  sgx_check("LogisticRegression",
+            ecall_logisticregression(
+              eid, regterm_ptr, regterm_length,
+              input_rows_ptr, input_rows_length,
+              &output_rows, &output_rows_length));
+
+  env->ReleaseByteArrayElements(noise_para, (jbyte *) noise_para_ptr, 0);
+  env->ReleaseByteArrayElements(shape, (jbyte *) shape_ptr, 0);
+  env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
+
+  jbyteArray ret = env->NewByteArray(output_rows_length);
+  env->SetByteArrayRegion(ret, 0, output_rows_length, (jbyte *) output_rows);
+  free(output_rows);
+
+  return ret;
+}
+
 JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Stake(
   JNIEnv *env, jobject obj, jlong eid, jbyteArray input_rows) {
   (void)obj;
@@ -856,7 +946,7 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
   free(output_rows);
 
   return ret;
-}*/
+}
 
 JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Project(
   JNIEnv *env, jobject obj, jlong eid, jbyteArray project_list, jbyteArray input_rows) {

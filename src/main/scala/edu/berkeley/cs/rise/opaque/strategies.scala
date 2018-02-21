@@ -54,7 +54,7 @@ object OpaqueOperators extends Strategy {
     case LogisticRegression(regterm, child) =>
       LogisticRegressionExec(regterm, planLater(child))::Nil
 
-    case LogisticRegression(regterm, eps, delta, child) =>
+    case DPLogisticRegression(regterm, eps, delta, child) => 
       DPLogisticRegressionExec(regterm, eps, delta, child)::Nil
 
     case Stake(child) =>

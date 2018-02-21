@@ -890,7 +890,7 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
   return ret;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LogisticRegression(  JNIEnv *env, jobject obj, jlong eid, jbyteArray regterm, jbyteArray input_rows) {
+JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_DPLogisticRegression(  JNIEnv *env, jobject obj, jlong eid, jbyteArray regterm, jbyteArray eps, jbyteArray delta, jbyteArray input_rows) {
   (void)obj;
 
   jboolean if_copy;
@@ -898,14 +898,20 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
   uint32_t regterm_length = (uint32_t) env->GetArrayLength(regterm);
   uint8_t *regterm_ptr = (uint8_t *) env->GetByteArrayElements(regterm, &if_copy);
 
+  uint32_t eps_length = (uint32_t) env->GetArrayLength(eps);
+  uint8_t *eps_ptr = (uint8_t *) env->GetByteArrayElements(eps, &if_copy);
+
+  uint32_t delta_length = (uint32_t) env->GetArrayLength(delta);
+  uint8_t *delta_ptr = (uint8_t *) env->GetByteArrayElements(delta, &if_copy);
+
   uint32_t input_rows_length = (uint32_t) env->GetArrayLength(input_rows);
   uint8_t *input_rows_ptr = (uint8_t *) env->GetByteArrayElements(input_rows, &if_copy);
 
   uint8_t *output_rows;
   size_t output_rows_length;
 
-  sgx_check("LogisticRegression",
-            ecall_logisticregression(
+  sgx_check("DPLogisticRegression",
+            ecall_dplogisticregression(
               eid, regterm_ptr, regterm_length,
               input_rows_ptr, input_rows_length,
               &output_rows, &output_rows_length));

@@ -43,32 +43,33 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
     }
   }
 
-  // clip samples according to different norms
-  def clip(option: String, bound: Double): DataFrame = {
-    option match {
-      case "2" => {
-        if(ds.logicalPlan.isInstanceOf[OpaqueOperator]){
-          return Dataset.ofRows(ds.sparkSession, Clip2Norm(bound, ds.logicalPlan.asInstanceOf[OpaqueOperator]))
-        }
-        else {
-          println("Please encrypt the DataFrame first!")
-          return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
-        }
-      }
-      case "inf" => {
-        if(ds.logicalPlan.isInstanceOf[OpaqueOperator]){
-          return Dataset.ofRows(ds.sparkSession, ClipInfNorm(bound, ds.logicalPlan.asInstanceOf[OpaqueOperator]))
-        }
-        else {
-          println("Please encrypt the DataFrame first!")
-          return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
-        }
-      }
+
+
+// clip samples according to different norms
+
+  def clip_l2(bound: Double): DataFrame = {
+    if(ds.logicalPlan.isInstanceOf[OpaqueOperator])
+      return Dataset.ofRows(ds.sparkSession, Clip2Norm(bound, ds.logicalPlan.asInstanceOf[OpaqueOperator]))
+    else {
+      println("Please encrypt the DataFrame first!")
+      return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
     }
   }
 
-  // gradient of different loss functions
-  /*def lr_gradient(regterm: Double, theta: Seq[Double]): DataFrame = {
+  def clip_linf(bound: Double): DataFrame = {
+    if(ds.logicalPlan.isInstanceOf[OpaqueOperator])
+      return Dataset.ofRows(ds.sparkSession, ClipInfNorm(bound, ds.logicalPlan.asInstanceOf[OpaqueOperator]))
+    else {
+      println("Please encrypt the DataFrame first!")
+      return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
+    }
+  }
+
+
+
+
+// gradient of different loss functions
+  def lr_gradient(regterm: Double, theta: Seq[Double]): DataFrame = {
     if(ds.logicalPlan.isInstanceOf[OpaqueOperator]){
       return Dataset.ofRows(ds.sparkSession, LrGradient(regterm, theta, ds.logicalPlan.asInstanceOf[OpaqueOperator]));
     }
@@ -76,25 +77,49 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
       println("Please encrypt the DataFrame first!")
       return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
     }
-  }*/
+  }
 
-  /*def hubersvm_gradient(regterm: Double, theta: Seq[Double]): DataFrame = {
-    Dataset.ofRows(ds.sparkSession, HuberSvmGradient(regterm, theta, ds.logicalPlan));
-  }*/
 
-  // different noise we need to implement differential private algs
-  // gaussian noise not necessary related to Dataset...but for convenience we first implement it here. May change this later.
-  /*def laplace_noise(noise_para: Double, shape: Int): DataFrame = {
-    Dataset.ofRows(ds.sparkSession, LaplaceNoise(noise_para, shape))
-  }*/
 
-  /*def gaussian_noise(noise_para: Double, shape: Int): DataFrame = {
-    if(ds.logicalPlan.isInstanceOf[OpaqueOperator]){
-      return Dataset.ofRows(ds.sparkSession, GaussianNoise(noise_para, shape, ds.logicalPlan.asInstanceOf[OpaqueOperator]));
-    }
+// different noise we need to implement differential private algorithms.
+  def add_laplace_noise(noise_para: Double): DataFrame = {
+    if(ds.logicalPlan.isInstanceOf[OpaqueOperator])
+      return Dataset.ofRows(ds.sparkSession, AddLaplaceNoise(noise_para, ds.logicalPlan.asInstanceOf[OpaqueOperator]))
     else {
       println("Please encrypt the DataFrame first!")
       return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
     }
-  }*/
+  }
+
+  def add_gaussian_noise(noise_para: Double): DataFrame = {
+    if(ds.logicalPlan.isInstanceOf[OpaqueOperator])
+      return Dataset.ofRows(ds.sparkSession, AddGaussianNoise(noise_para, ds.logicalPlan.asInstanceOf[OpaqueOperator]))
+    else {
+      println("Please encrypt the DataFrame first!")
+      return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
+    }
+  }
+
+
+
+
+// complete algorithms
+  def logistic_regression(regterm: Double): DataFrame = {
+    if(ds.logicalPlan.isInstanceOf[OpaqueOperator])
+      return Dataset.ofRows(ds.sparkSession, LogisticRegression(regterm, ds.logicalPlan.asInstanceOf[OpaqueOperator]))
+    else {
+      println("Please encrypt the DataFrame first!")
+      return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
+    }
+  }
+
+// complete dp algorithms
+  def dp_logistic_regression(regterm: Double, eps: Double, delta: Double): DataFrame {
+    if(ds.logicalPlan.isInstanceOf[OpaqueOperator])
+      return Dataset.ofRows(ds.sparkSession, DPLogisticRegression(regterm, eps, delta, ds.logicalPlan.asInstanceOf[OpaqueOperator]))
+    else {
+      println("Please encrypt the DataFrame first!")
+      return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
+    }
+  }
 }

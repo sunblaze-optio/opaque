@@ -685,8 +685,21 @@ object Utils {
         )
         builder.sizedByteArray()
       }
-      //case
     }
+  }
+
+  def serializeRow(values: Seq[Any], dataType: DataType): Array[Byte] = {
+    val builder = new FlatBufferBuilder
+
+    builder.finish(tuix.Row.createRow(
+      builder, 
+      tuix.Row.createFieldValuesVector(
+        builder,
+        xs.map {
+          case x => flatbuffersCreateField(builder, x, DoubleType, false)
+        }.toArray), 
+        false))
+    builder.sizedByteArray()
   }
 
   def serializeFilterExpression(condition: Expression, input: Seq[Attribute]): Array[Byte] = {

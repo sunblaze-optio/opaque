@@ -245,14 +245,14 @@ case class ClipInfNormExec(bound: Double, child: SparkPlan)
   }
 }
 
-/* case class LrGradientExec(regterm: Double, theta: Seq[Double], child: SparkPlan)
+case class LrGradientExec(regterm: Double, theta: Seq[Double], child: SparkPlan)
   extends UnaryExecNode with OpaqueOperatorExec {
 
   override def output: Seq[Attribute] = child.output
 
   override def executeBlocked(): RDD[Block] = {
     val regtermSer = Utils.serializeField(regterm, DoubleType)
-    val thetaSer = Utils.serializeParameters(theta)
+    val thetaSer = Utils.serializeRow(theta, DoubleType)
     timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "LrGradientExec") {
       childRDD => childRDD.map { block =>
         val (enclave, eid) = Utils.initEnclave()
@@ -263,18 +263,70 @@ case class ClipInfNormExec(bound: Double, child: SparkPlan)
 
 }
 
-case class GaussianNoiseExec(noise_para: Double, shape: Int, child: SparkPlan)
+case class AddLaplaceNoiseExec(noise_para: Double, child: SparkPlan)
   extends UnaryExecNode with OpaqueOperatorExec {
 
   override def output: Seq[Attribute] = child.output
 
   override def executeBlocked(): RDD[Block] = {
     val noise_paraSer = Utils.serializeField(noise_para, DoubleType)
-    val shapeSer = Utils.serializeShape(shape, IntegerType)
-    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "GaussianNoiseExec") {
+    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "AddLaplaceNoiseExec") {
       childRDD => childRDD.map { block =>
         val (enclave, eid) = Utils.initEnclave()
-        Block(enclave.GaussianNoise(eid, noise_paraSer, shapeSer, block.bytes))
+        Block(enclave.AddLaplaceNoise(eid, noise_paraSer, block.bytes))
+      }
+    }
+
+  }
+}
+
+case class AddGaussianNoiseExec(noise_para: Double, child: SparkPlan)
+  extends UnaryExecNode with OpaqueOperatorExec {
+
+  override def output: Seq[Attribute] = child.output
+
+  override def executeBlocked(): RDD[Block] = {
+    val noise_paraSer = Utils.serializeField(noise_para, DoubleType)
+    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "AddGaussianNoiseExec") {
+      childRDD => childRDD.map { block =>
+        val (enclave, eid) = Utils.initEnclave()
+        Block(enclave.AddGaussianNoise(eid, noise_paraSer, block.bytes))
+      }
+    }
+
+  }
+}
+
+case class LogisticRegressionExec(regterm: Double, child: SparkPlan)
+  extends UnaryExecNode with OpaqueOperatorExec {
+
+  override def output: Seq[Attribute] = child.output
+
+  override def executeBlocked(): RDD[Block] = {
+    val regtermSer = Utils.serializeField(regterm, DoubleType)
+    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "LogisticRegressionExec") {
+      childRDD => childRDD.map { block =>
+        val (enclave, eid) = Utils.initEnclave()
+        Block(enclave.LogisticRegression(eid, regtermSer, block.bytes))
+      }
+    }
+
+  }
+}
+
+case class DPLogisticRegressionExec(regterm: Double, eps: Double, delta: Double, child: SparkPlan)
+  extends UnaryExecNode with OpaqueOperatorExec {
+
+  override def output: Seq[Attribute] = child.output
+
+  override def executeBlocked(): RDD[Block] = {
+    val regtermSer = Utils.serializeField(regterm, DoubleType)
+    val epsSer = Utils.serializeField(eps, DoubleType)
+    val deltaSer = Utils.serializeField(delta, DoubleType)
+    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "DPLogisticRegressionExec") {
+      childRDD => childRDD.map { block =>
+        val (enclave, eid) = Utils.initEnclave()
+        Block(enclave.DPLogisticRegression(eid, regtermSer, epsSer, deltaSer, block.bytes))
       }
     }
 
@@ -294,7 +346,7 @@ case class StakeExec(child: SparkPlan)
       }
     }
   }  
-}*/
+}
 
 case class ObliviousProjectExec(projectList: Seq[NamedExpression], child: SparkPlan)
   extends UnaryExecNode with OpaqueOperatorExec {

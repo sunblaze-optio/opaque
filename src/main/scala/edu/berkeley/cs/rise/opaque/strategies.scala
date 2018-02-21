@@ -42,14 +42,23 @@ object OpaqueOperators extends Strategy {
     case ClipInfNorm(bound, child) => 
       ClipInfNormExec(bound, planLater(child)):: Nil
 
-/*    case LrGradient(regterm, theta, child) =>
+    case LrGradient(regterm, theta, child) =>
       LrGradientExec(regterm, theta, planLater(child))::Nil
 
-    case GaussianNoise(noise_para, shape, child) =>
-      GaussianNoiseExec(noise_para, shape, planLater(child))::Nil
+    case AddLapalceNoise(noise_para, child) =>
+      AddLaplaceNoiseExec(noise_para, planLater(child))::Nil
+
+    case AddGaussianNoise(noise_para, shape, child) =>
+      AddGaussianNoiseExec(noise_para, planLater(child))::Nil
+
+    case LogisticRegression(regterm, child) =>
+      LogisticRegressionExec(regterm, planLater(child))::Nil
+
+    case LogisticRegression(regterm, eps, delta, child) =>
+      DPLogisticRegressionExec(regterm, eps, delta, child)::Nil
 
     case Stake(child) =>
-      StakeExec(planLater(child)) :: Nil*/
+      StakeExec(planLater(child)) :: Nil
 
     case EncryptedProject(projectList, child) =>
       ObliviousProjectExec(projectList, planLater(child)) :: Nil

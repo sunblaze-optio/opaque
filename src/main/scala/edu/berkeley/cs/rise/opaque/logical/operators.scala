@@ -122,27 +122,41 @@ case class ClipInfNorm(bound: Double, child: OpaqueOperator)
   override def output: Seq[Attribute] = child.output
 }
 
-/*case class LrGradient(regterm: Double, theta: Seq[Double], child: OpaqueOperator)
+case class LrGradient(regterm: Double, theta: Seq[Double], child: OpaqueOperator)
   extends UnaryNode with OpaqueOperator {
 
   override def output: Seq[Attribute] = child.output
 }
 
-case class HuberSvmGradient(regterm: Double, left: OpaqueOperator, right: OpaqueOperator)
-  extends BinaryNode with OpaqueOperator {
+/*case class HuberSvmGradient(regterm: Double, left: OpaqueOperator, right: OpaqueOperator)
+  extends UnaryNode with OpaqueOperator {
 
   override def output: Seq[Attribute] = left.output
-}
+}*/
 
-case class LaplaceGradient(noise_para: Double)
-  extends LeafNode with OpaqueOperator {
-}
-
-case class GaussianNoise(noise_para: Double, shape: Int, child: OpaqueOperator)
+case class AddLaplaceNoise(noise_para: Double, child: OpaqueOperator)
   extends UnaryNode with OpaqueOperator {
 
   override def output: Seq[Attribute] = child.output
-}*/
+}
+
+case class AddGaussianNoise(noise_para: Double, child: OpaqueOperator)
+  extends UnaryNode with OpaqueOperator {
+
+  override def output: Seq[Attribute] = child.output
+}
+
+case class LogisticRegression(regterm: Double, child: OpaqueOperator)
+  extends UnaryNode with OpaqueOperator {
+
+override def output: Seq[Attribute] = child.output
+}
+
+case class DPLogisticRegression(regterm: Double, eps:Double, delta: Double, child: OpaqueOperator)
+  extends UnaryNode with OpaqueOperator {
+
+override def output: Seq[Attribute] = child.output
+}
 
 case class ObliviousProject(projectList: Seq[NamedExpression], child: OpaqueOperator)
   extends UnaryNode with OpaqueOperator {

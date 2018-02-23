@@ -418,8 +418,8 @@ private:
 
 void print(const tuix::Row *in);
 void print(const tuix::Field *field);
-void extract_dataset(EncryptedBlocksToRowReader &r, double* features, double* labels, int &attribute_num, int &sample_num);
-void serialize_dataset(flatbuffers::FlatBufferBuilder &builder, FlatbuffersRowWriter &w, double* features, double* labels, int attribute_num, int sample_num);
+void extract_dataset(EncryptedBlocksToRowReader &r, double* features, double* labels, int &sample_num, int &attribute_num);
+void serialize_dataset(flatbuffers::FlatBufferBuilder &builder, FlatbuffersRowWriter &w, double* features, double* labels, int sample_num, int attribute_num);
 //void serialize_vector(FlatbuffersRowWriter &w, double* result, int len);
 
 #endif

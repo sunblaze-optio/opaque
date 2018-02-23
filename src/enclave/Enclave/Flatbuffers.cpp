@@ -66,7 +66,7 @@ void print(const tuix::Field *field) {
 
 }
 
-void extract_dataset(EncryptedBlocksToRowReader &r, double* features, double* labels, int &attribute_num, int &sample_num) {
+void extract_dataset(EncryptedBlocksToRowReader &r, double* features, double* labels, int &sample_num, int &attribute_num) {
   int feature_ptr = 0;
   int label_ptr = 0;
   sample_num = 0;
@@ -84,7 +84,7 @@ void extract_dataset(EncryptedBlocksToRowReader &r, double* features, double* la
   }
 }
 
-void serialize_dataset(flatbuffers::FlatBufferBuilder &builder, FlatbuffersRowWriter &w, double* features, double* labels, int attribute_num, int sample_num) {
+void serialize_dataset(flatbuffers::FlatBufferBuilder &builder, FlatbuffersRowWriter &w, double* features, double* labels, int sample_num, int attribute_num) {
   for(int i = 0; i < sample_num; ++i) {
     std::vector<flatbuffers::Offset<tuix::Field>> tmp_row;
     for(int j = 0; j < attribute_num; ++j) {

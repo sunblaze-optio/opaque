@@ -26,16 +26,16 @@ void clip2norm(uint8_t *bound, size_t bound_length,
   FlatbuffersRowWriter w;
 
   double features[1024];
-  int attribute_num;
   int sample_num;
+  int attribute_num;
   double labels[128];
   double result[1024];
 
-  extract_dataset(r, features, labels, attribute_num, sample_num);
+  extract_dataset(r, features, labels, sample_num, attribute_num);
 
-  clip_l2(bound_value, features, labels, attribute_num, sample_num, result);
+  clip_l2(bound_value, features, labels, sample_num, attribute_num, result);
 
-  serialize_dataset(builder, w, result, labels, attribute_num, sample_num);
+  serialize_dataset(builder, w, result, labels, sample_num, attribute_num);
 
   w.finish(w.write_encrypted_blocks());
   *output_rows = w.output_buffer();
@@ -53,63 +53,21 @@ void clipinfnorm(uint8_t *bound, size_t bound_length,
 
   const tuix::DoubleField* clip_bound = flatbuffers::GetRoot<tuix::DoubleField>(bound);
   const double bound_value = clip_bound->value();
-  double a = bound_value;
-  a = a+1;
 
   EncryptedBlocksToRowReader r(input_rows, input_rows_length);
   FlatbuffersRowWriter w;
 
-  /*double features[1000000];
-  int attribute_num;
-  int sample_num; 
+  double features[1000000];
+  int sample_num;
+  int attribute_num; 
   double labels[10000];
-  double result[1000000];*/
+  double result[1000000];
 
-  //extract_dataset(r, features, labels, attribute_num, sample_num);
+  extract_dataset(r, features, labels, sample_num, attribute_num);
 
-  //clip_linf(bound_value, features, labels, attribute_num, sample_num, result);
+  clip_linf(bound_value, features, labels, sample_num, attribute_num, result);
 
-  //serialize_dataset(builder, w, result, labels, attribute_num, sample_num);
-
-  /*while (r.has_next()) {
-    const tuix::Row *row = r.next();
-    int row_len = row->field_values()->Length();
-    std::vector<flatbuffers::Offset<tuix::Field>> tmp_row;
-    for(int i = 0; i < row_len; ++i) {
-      double value = static_cast<const tuix::DoubleField*>(row->field_values()->Get(i)->value())->value();
-      if(value > bound_value) {
-        tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, bound_value).Union()));
-      }
-      else {
-        tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, value).Union()));
-      }
-    }
-    const tuix::Row *clipped_row = flatbuffers::GetTemporaryPointer<tuix::Row>(builder, tuix::CreateRow(builder, builder.CreateVector(tmp_row)));
-    w.write(clipped_row);
-  }*/
-
-  /*double tmp[ATTRIBUTE_BOUND];
-  while (r.has_next()) {
-    const tuix::Row *row = r.next();
-    int row_len = row->field_values()->Length();
-    for(int i = 0; i < row_len; ++i) {
-      tmp[i] = static_cast<const tuix::DoubleField*>(row->field_values()->Get(i)->value())->value();
-    }
-    std::vector<flatbuffers::Offset<tuix::Field> > tmp_row;
-    for(int i = 0; i < row_len; ++i) {
-      tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, tmp[i]).Union()));
-    }
-    const tuix::Row *final_row = flatbuffers::GetTemporaryPointer<tuix::Row>(builder, tuix::CreateRow(builder, builder.CreateVector(tmp_row)));
-    w.write(final_row);
-  }*/
-
-  int cnt = 0;
-  while(r.has_next()) {
-    const tuix::Row *row = r.next();
-    if(cnt==999)
-      w.write(row);
-    cnt = cnt+1;
-  }
+  serialize_dataset(builder, w, result, labels, sample_num, attribute_num);
 
   w.finish(w.write_encrypted_blocks());
   *output_rows = w.output_buffer();

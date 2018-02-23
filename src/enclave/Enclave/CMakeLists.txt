@@ -7,6 +7,8 @@ set(SOURCES
   Crypto.cpp
   Enclave.cpp
   Clip.cpp
+  Noise.cpp
+  Gradient.cpp
   Filter.cpp
   Flatbuffers.cpp
   Join.cpp

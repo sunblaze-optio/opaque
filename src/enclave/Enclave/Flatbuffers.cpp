@@ -91,12 +91,34 @@ void serialize_dataset(flatbuffers::FlatBufferBuilder &builder, FlatbuffersRowWr
       tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, features[i*attribute_num+i+j]).Union()));
     }
     tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, labels[i]).Union()));
-    const tuix::Row *clipped_row = flatbuffers::GetTemporaryPointer<tuix::Row>(builder, tuix::CreateRow(builder, builder.CreateVector(tmp_row)));
-    w.write(clipped_row);
+    const tuix::Row *final_row = flatbuffers::GetTemporaryPointer<tuix::Row>(builder, tuix::CreateRow(builder, builder.CreateVector(tmp_row)));
+    w.write(final_row);
   } 
 }
 
-//void serialize_vector(FlatbuffersRowWriter &w, double* result, int len);
+void extract_vector(EncryptedBlocksToRowReader &r, double* theta, int &attribute_num) {
+  int theta_ptr = 0;
+  sample_num = 0;
+  while(r.has_next()) {
+    const tuix::Row *row = r.next();
+    attribute_num = row->field_values()->Length()-1;
+    for(int i = 0; i <= attribute_num; ++i) {
+      double value = static_cast<const tuix::DoubleField*>(row->field_values()->Get(i)->value())->value();
+      theta[theta_ptr++] = value;
+    }
+  }
+}
+
+void serialize_vector(flatbuffers::FlatBufferBuilder &builder, FlatbuffersRowWriter &w, double* theta, int attribute_num) {
+  for(int i = 0; i < 1; ++i) {
+    std::vector<flatbuffers::Offset<tuix::Field>> tmp_row;
+    for(int j = 0; j < attribute_num; ++j) {
+      tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, features[i*attribute_num+i+j]).Union()));
+    }
+    const tuix::Row *final_row = flatbuffers::GetTemporaryPointer<tuix::Row>(builder, tuix::CreateRow(builder, builder.CreateVector(tmp_row)));
+    w.write(final_row);
+  } 
+}
 
 template<>
 flatbuffers::Offset<tuix::Row> flatbuffers_copy(

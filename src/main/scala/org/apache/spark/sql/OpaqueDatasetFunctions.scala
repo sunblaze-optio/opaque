@@ -33,18 +33,6 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
     Dataset.ofRows(ds.sparkSession, Encrypt(false, ds.logicalPlan))
   }
 
-  def stake(): DataFrame  = {
-    if(ds.logicalPlan.isInstanceOf[OpaqueOperator]){
-      return Dataset.ofRows(ds.sparkSession, Stake(ds.logicalPlan.asInstanceOf[OpaqueOperator]))
-    }
-    else{
-      println("Please encrypt the DataFrame first!")
-      return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
-    }
-  }
-
-
-
 // clip samples according to different norms
 
   def clip_l2(bound: Double): DataFrame = {
@@ -102,7 +90,7 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
 
 
 
-
+/*
 // complete algorithms
   def logistic_regression(regterm: Double): DataFrame = {
     if(ds.logicalPlan.isInstanceOf[OpaqueOperator])
@@ -121,5 +109,5 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
       println("Please encrypt the DataFrame first!")
       return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
     }
-  }
+  }*/
 }

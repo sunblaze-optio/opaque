@@ -51,14 +51,11 @@ object OpaqueOperators extends Strategy {
     case AddGaussianNoise(noise_para, shape, child) =>
       AddGaussianNoiseExec(noise_para, planLater(child))::Nil
 
-    case LogisticRegression(regterm, child) =>
+    /*case LogisticRegression(regterm, child) =>
       LogisticRegressionExec(regterm, planLater(child))::Nil
 
     case DPLogisticRegression(regterm, eps, delta, child) => 
-      DPLogisticRegressionExec(regterm, eps, delta, child)::Nil
-
-    case Stake(child) =>
-      StakeExec(planLater(child)) :: Nil
+      DPLogisticRegressionExec(regterm, eps, delta, child)::Nil*/
 
     case EncryptedProject(projectList, child) =>
       ObliviousProjectExec(projectList, planLater(child)) :: Nil

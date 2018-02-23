@@ -32,11 +32,9 @@ class SGXEnclave extends java.io.Serializable {
   @native def AddLaplaceNoise(eid: Long, noise_para: Array[Byte], input: Array[Byte]): Array[Byte]
   @native def AddGaussianNoise(eid: Long, noise_para: Array[Byte], input: Array[Byte]): Array[Byte]
 
-  @native def LogisticRegression(eid: Long, regterm: Array[Byte], input: Array[Byte]): Array[Byte]
+  /*@native def LogisticRegression(eid: Long, regterm: Array[Byte], input: Array[Byte]): Array[Byte]
 
-  @native def DPLogisticRegression(eid: Long, regterm: Array[Byte], eps: Array[Byte], delta: Array[Byte], input: Array[Byte]): Array[Byte]
-
-  @native def Stake(eid: Long, input: Array[Byte]): Array[Byte]
+  @native def DPLogisticRegression(eid: Long, regterm: Array[Byte], eps: Array[Byte], delta: Array[Byte], input: Array[Byte]): Array[Byte]*/
 
   @native def Project(eid: Long, projectList: Array[Byte], input: Array[Byte]): Array[Byte]
 

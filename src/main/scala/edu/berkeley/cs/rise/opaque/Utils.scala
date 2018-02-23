@@ -619,60 +619,6 @@ object Utils {
     }
   }
 
-/*  def serializeNoisePara(value: Double): Array[Byte] = {
-    val builder = new FlatBufferBuilder
-    builder.finish(
-      tuix.NoisePara.createNoisePara(
-        builder,
-        value))
-    builder.sizedByteArray()
-  }
-
-  def serializeShape(value: Int): Array[Byte] = {
-    val builder = new FlatBufferBuilder
-    builder.finish(
-      tuix.Shape.createShape(
-        builder,
-        value))
-    builder.sizedByteArray()
-  }
-
-  def serializeParameters(value: Seq[Double]): Array[Byte] = {
-    val builder = new FlatBufferBuilder
-    var parasOffsets = ArrayBuilder.make[Int]
-
-    for (v <- value) {
-      parasOffsets += tuix.DoubleField.createDoubleField(builder, v)
-    }
-
-    val parasOffsetsArray = parasOffsets.result
-    builder.finish(
-      tuix.Parameters.createParameters(
-        builder,
-        tuix.Parameters.createValueVector(
-          builder, 
-          parasOffsetsArray)))
-    builder.sizedByteArray()
-  }
-
-  def serializeBound(value: Double): Array[Byte] = {
-    val builder = new FlatBufferBuilder
-    builder.finish(
-      tuix.Bound.createBound(
-        builder,
-        value))
-    builder.sizedByteArray()
-  }
-
-  def serializeRegularizationTerm(value: Double): Array[Byte] = {
-    val builder = new FlatBufferBuilder
-    builder.finish(
-      tuix.RegularizationTerm.createRegularizationTerm(
-        builder,
-        value))
-    builder.sizedByteArray()
-  }*/
-
   def serializeField(value: Any, dataType: DataType): Array[Byte] = {
     val builder = new FlatBufferBuilder
     (value, dataType) match {

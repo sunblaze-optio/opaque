@@ -77,7 +77,7 @@ void ecall_addgaussiannoise(uint8_t* noise_para, size_t noise_para_length,
           output_rows, output_rows_length);
 }
 
-void ecall_logisticregression(uint8_t* regterm, size_t regterm_length,
+/*void ecall_logisticregression(uint8_t* regterm, size_t regterm_length,
                   uint8_t *input_rows, size_t input_rows_length,
                   uint8_t **output_rows, size_t *output_rows_length) {
   logisticregression(regterm, regterm_length,
@@ -95,13 +95,7 @@ void ecall_dplogisticregression(uint8_t* regterm, size_t regterm_length,
           delta, delta_length,
           input_rows, input_rows_length,
           output_rows, output_rows_length);
-}
-
-void ecall_stake(uint8_t *input_rows, size_t input_rows_length,
-                  uint8_t **output_rows, size_t *output_rows_length) {
-  stake(input_rows, input_rows_length,
-         output_rows, output_rows_length);
-}
+}*/
 
 void ecall_project(uint8_t *condition, size_t condition_length,
                    uint8_t *input_rows, size_t input_rows_length,

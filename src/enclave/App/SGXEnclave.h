@@ -26,14 +26,13 @@ extern "C" {
   JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_AddGaussianNoise(
     JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
 
+/*
   JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LogisticRegression(
     JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
 
   JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_DPLogisticRegression(
     JNIEnv *, jobject, jlong, jbyteArray, jbyteArray, jbyteArray, jbyteArray);
-
-  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Stake(
-    JNIEnv *, jobject, jlong, jbyteArray);
+*/
 
   JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Project(
     JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);

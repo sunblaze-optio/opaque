@@ -104,12 +104,6 @@ case class EncryptedBlockRDD(
   override def producedAttributes: AttributeSet = outputSet
 }
 
-case class Stake(child: OpaqueOperator) 
-  extends UnaryNode with OpaqueOperator {
-
-  override def output: Seq[Attribute] = child.output
-}
-
 case class Clip2Norm(bound: Double, child: OpaqueOperator)
   extends UnaryNode with OpaqueOperator {
 
@@ -146,7 +140,7 @@ case class AddGaussianNoise(noise_para: Double, child: OpaqueOperator)
   override def output: Seq[Attribute] = child.output
 }
 
-case class LogisticRegression(regterm: Double, child: OpaqueOperator)
+/*case class LogisticRegression(regterm: Double, child: OpaqueOperator)
   extends UnaryNode with OpaqueOperator {
 
 override def output: Seq[Attribute] = child.output
@@ -156,7 +150,7 @@ case class DPLogisticRegression(regterm: Double, eps:Double, delta: Double, chil
   extends UnaryNode with OpaqueOperator {
 
 override def output: Seq[Attribute] = child.output
-}
+}*/
 
 case class ObliviousProject(projectList: Seq[NamedExpression], child: OpaqueOperator)
   extends UnaryNode with OpaqueOperator {

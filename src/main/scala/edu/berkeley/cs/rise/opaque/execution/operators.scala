@@ -297,6 +297,7 @@ case class AddGaussianNoiseExec(noise_para: Double, child: SparkPlan)
   }
 }
 
+/*
 case class LogisticRegressionExec(regterm: Double, child: SparkPlan)
   extends UnaryExecNode with OpaqueOperatorExec {
 
@@ -332,21 +333,7 @@ case class DPLogisticRegressionExec(regterm: Double, eps: Double, delta: Double,
 
   }
 }
-
-case class StakeExec(child: SparkPlan)
-  extends UnaryExecNode with OpaqueOperatorExec {
-
-  override def output: Seq[Attribute] = child.output
-
-  override def executeBlocked(): RDD[Block] = {
-    timeOperator(child.asInstanceOf[OpaqueOperatorExec].executeBlocked(), "StakeExec") {
-      childRDD => childRDD.map { block =>
-        val (enclave, eid) = Utils.initEnclave()
-        Block(enclave.Stake(eid, block.bytes))
-      }
-    }
-  }  
-}
+*/
 
 case class ObliviousProjectExec(projectList: Seq[NamedExpression], child: SparkPlan)
   extends UnaryExecNode with OpaqueOperatorExec {

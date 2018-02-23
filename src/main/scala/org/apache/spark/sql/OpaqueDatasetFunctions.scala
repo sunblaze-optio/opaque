@@ -19,13 +19,12 @@ package org.apache.spark.sql
 
 import edu.berkeley.cs.rise.opaque.logical.OpaqueOperator
 import edu.berkeley.cs.rise.opaque.logical.Encrypt
-import edu.berkeley.cs.rise.opaque.logical.Stake
 import edu.berkeley.cs.rise.opaque.logical.Clip2Norm
 import edu.berkeley.cs.rise.opaque.logical.ClipInfNorm
-//import edu.berkeley.cs.rise.opaque.logical.LrGradient
+import edu.berkeley.cs.rise.opaque.logical.LrGradient
 //import edu.berkeley.cs.rise.opaque.logical.HuberSvmGradient
-//import edu.berkeley.cs.rise.opaque.logical.LaplaceNoise
-//import edu.berkeley.cs.rise.opaque.logical.GaussianNoise
+import edu.berkeley.cs.rise.opaque.logical.AddLaplaceNoise
+import edu.berkeley.cs.rise.opaque.logical.AddGaussianNoise
 
 class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
 

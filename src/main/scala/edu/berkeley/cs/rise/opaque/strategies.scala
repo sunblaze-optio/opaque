@@ -45,10 +45,10 @@ object OpaqueOperators extends Strategy {
     case LrGradient(regterm, theta, child) =>
       LrGradientExec(regterm, theta, planLater(child))::Nil
 
-    case AddLapalceNoise(noise_para, child) =>
+    case AddLaplaceNoise(noise_para, child) =>
       AddLaplaceNoiseExec(noise_para, planLater(child))::Nil
 
-    case AddGaussianNoise(noise_para, shape, child) =>
+    case AddGaussianNoise(noise_para, child) =>
       AddGaussianNoiseExec(noise_para, planLater(child))::Nil
 
     /*case LogisticRegression(regterm, child) =>

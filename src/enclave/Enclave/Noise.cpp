@@ -10,13 +10,10 @@ void addlaplacenoise(uint8_t *noise_para, size_t noise_para_length,
             uint8_t *input_rows, size_t input_rows_length,
             uint8_t **output_rows, size_t *output_rows_length) {
 
+  flatbuffers::FlatBufferBuilder builder;
   flatbuffers::Verifier v1(noise_para, noise_para_length);
-  check(v1.VerifyBuffer<tuix::NoisePara>(nullptr),
+  check(v1.VerifyBuffer<tuix::DoubleField>(nullptr),
         "Corrupted Bound %p of length %d\n", noise_para, noise_para_length);
-
-  flatbuffers::Verifier v2(shape, shape_length);
-  check(v2.VerifyBuffer<tuix::Shape>(nullptr),
-        "Corrupted Bound %p of length %d\n", shape, shape_length);
 
   const tuix::DoubleField* para = flatbuffers::GetRoot<tuix::DoubleField>(noise_para);
   const double b = para->value();
@@ -43,13 +40,10 @@ void addgaussiannoise(uint8_t *noise_para, size_t noise_para_length,
             uint8_t *input_rows, size_t input_rows_length,
             uint8_t **output_rows, size_t *output_rows_length) {
 
+  flatbuffers::FlatBufferBuilder builder;
   flatbuffers::Verifier v1(noise_para, noise_para_length);
-  check(v1.VerifyBuffer<tuix::NoisePara>(nullptr),
+  check(v1.VerifyBuffer<tuix::DoubleField>(nullptr),
         "Corrupted Bound %p of length %d\n", noise_para, noise_para_length);
-
-  flatbuffers::Verifier v2(shape, shape_length);
-  check(v2.VerifyBuffer<tuix::Shape>(nullptr),
-        "Corrupted Bound %p of length %d\n", shape, shape_length);
 
   const tuix::DoubleField* para = flatbuffers::GetRoot<tuix::DoubleField>(noise_para);
   const double std_dev = para->value();

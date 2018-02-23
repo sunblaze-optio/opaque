@@ -641,7 +641,7 @@ object Utils {
       builder, 
       tuix.Row.createFieldValuesVector(
         builder,
-        xs.map {
+        values.map {
           case x => flatbuffersCreateField(builder, x, DoubleType, false)
         }.toArray), 
         false))

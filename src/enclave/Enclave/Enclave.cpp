@@ -5,7 +5,6 @@
 
 #include "Aggregate.h"
 #include "Crypto.h"
-#include "Stake.h"
 #include "Clip.h"
 #include "Gradient.h"
 #include "Noise.h"

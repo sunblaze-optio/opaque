@@ -818,7 +818,6 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
               &output_rows, &output_rows_length));
 
   env->ReleaseByteArrayElements(noise_para, (jbyte *) noise_para_ptr, 0);
-  env->ReleaseByteArrayElements(shape, (jbyte *) shape_ptr, 0);
   env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
 
   jbyteArray ret = env->NewByteArray(output_rows_length);
@@ -849,7 +848,6 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
               &output_rows, &output_rows_length));
 
   env->ReleaseByteArrayElements(noise_para, (jbyte *) noise_para_ptr, 0);
-  env->ReleaseByteArrayElements(shape, (jbyte *) shape_ptr, 0);
   env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
 
   jbyteArray ret = env->NewByteArray(output_rows_length);
@@ -880,8 +878,7 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
               input_rows_ptr, input_rows_length,
               &output_rows, &output_rows_length));
 
-  env->ReleaseByteArrayElements(noise_para, (jbyte *) noise_para_ptr, 0);
-  env->ReleaseByteArrayElements(shape, (jbyte *) shape_ptr, 0);
+  env->ReleaseByteArrayElements(regterm, (jbyte *) regterm_ptr, 0);
   env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
 
   jbyteArray ret = env->NewByteArray(output_rows_length);
@@ -917,9 +914,14 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
               input_rows_ptr, input_rows_length,
               &output_rows, &output_rows_length));
 
-  env->ReleaseByteArrayElements(noise_para, (jbyte *) noise_para_ptr, 0);
-  env->ReleaseByteArrayElements(shape, (jbyte *) shape_ptr, 0);
+  env->ReleaseByteArrayElements(regterm, (jbyte *) regterm_ptr, 0);
   env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
+
+  env->ReleaseByteArrayElements(regterm, (jbyte *) eps_ptr, 0);
+  env->ReleaseByteArrayElements(input_rows, (jbyte *) eps_ptr, 0);
+
+  env->ReleaseByteArrayElements(regterm, (jbyte *) delta_ptr, 0);
+  env->ReleaseByteArrayElements(input_rows, (jbyte *) delta_ptr, 0);
 
   jbyteArray ret = env->NewByteArray(output_rows_length);
   env->SetByteArrayRegion(ret, 0, output_rows_length, (jbyte *) output_rows);

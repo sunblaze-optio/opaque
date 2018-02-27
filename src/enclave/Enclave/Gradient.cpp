@@ -15,16 +15,16 @@ void lrgradient(uint8_t *regterm, size_t regterm_length,
 
   flatbuffers::Verifier v1(regterm, regterm_length);
   check(v1.VerifyBuffer<tuix::DoubleField>(nullptr),
-        "Corrupted Bound %p of length %d\n", regterm, regterm_length);
+        "Corrupted Regularization Term %p of length %d\n", regterm, regterm_length);
 
   flatbuffers::Verifier v2(theta, theta_length);
   check(v2.VerifyBuffer<tuix::Row>(nullptr),
-        "Corrupted Bound %p of length %d\n", theta, theta_length);
+        "Corrupted Theta %p of length %d\n", theta, theta_length);
 
   const tuix::DoubleField* regularization_term = flatbuffers::GetRoot<tuix::DoubleField>(regterm);
   const double reg_value = regularization_term->value();
 
-  double c_theta[128];
+  double c_theta[ATTRIBUTE_BOUND];
 
   const tuix::Row* para = flatbuffers::GetRoot<tuix::Row>(theta);
   int width = para->field_values()->Length();
@@ -35,17 +35,47 @@ void lrgradient(uint8_t *regterm, size_t regterm_length,
   EncryptedBlocksToRowReader r(input_rows, input_rows_length);
   FlatbuffersRowWriter w;
 
-  double features[1024];
-  int sample_num;
-  int attribute_num;
-  double labels[1024];
-  double result[1024];
+  double features[DATASET_BOUND];
+  int sample_num = 0;
+  int attribute_num = 0;
+  double labels[SAMPLE_BOUND];
+  double result[ATTRIBUTE_BOUND];
 
-  extract_dataset(r, features, labels, sample_num, attribute_num);
+  int feature_ptr = 0;
+  int label_ptr = 0;
+
+  while(r.has_next()) {
+    ++sample_num;
+    const tuix::Row *row = r.next();
+    attribute_num = row->field_values()->Length()-1;
+    for(int i = 0; i <= attribute_num; ++i) {
+      double value = static_cast<const tuix::DoubleField*>(row->field_values()->Get(i)->value())->value();
+      if(i != attribute_num)
+        features[feature_ptr++] = value;
+      else
+        labels[label_ptr++] = value;
+    }
+  }
+  features[0] = features[0];
+  labels[0] = labels[0];
+
+  //extract_dataset(r, features, labels, sample_num, attribute_num);
 
   lr_gradient(reg_value, c_theta, features, labels, sample_num, attribute_num, result);
 
-  serialize_vector(builder, w, result, attribute_num);
+  //serialize_vector(builder, w, result, 1, attribute_num);
+
+  sample_num = 1;
+  attribute_num = attribute_num+1;
+  for(int i = 0; i < sample_num; ++i) {
+    std::vector<flatbuffers::Offset<tuix::Field> > tmp_row;
+    for(int j = 0; j < attribute_num; ++j) {
+      tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, result[j]).Union()));
+  }
+    tmp_row = tmp_row;
+    const tuix::Row *final_row = flatbuffers::GetTemporaryPointer<tuix::Row>(builder, tuix::CreateRow(builder, builder.CreateVector(tmp_row)));
+    w.write(final_row);
+  }
 
   w.finish(w.write_encrypted_blocks());
   *output_rows = w.output_buffer();

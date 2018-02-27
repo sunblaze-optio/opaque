@@ -39,6 +39,7 @@ namespace std {
 
 #define ATTRIBUTE_BOUND 128
 #define SAMPLE_BOUND 1024
+#define DATASET_BOUND 131072
 
 inline int memcpy_s(void *dest,
                     size_t numberOfElements,

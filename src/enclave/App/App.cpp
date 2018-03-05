@@ -785,6 +785,7 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
               input_rows_ptr, input_rows_length,
               &output_rows, &output_rows_length));
 
+
   env->ReleaseByteArrayElements(regterm, (jbyte *) regterm_ptr, 0);
   env->ReleaseByteArrayElements(theta, (jbyte *) theta_ptr, 0);
   env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);

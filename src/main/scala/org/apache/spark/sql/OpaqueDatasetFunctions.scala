@@ -25,6 +25,7 @@ import edu.berkeley.cs.rise.opaque.logical.LrGradient
 //import edu.berkeley.cs.rise.opaque.logical.HuberSvmGradient
 import edu.berkeley.cs.rise.opaque.logical.AddLaplaceNoise
 import edu.berkeley.cs.rise.opaque.logical.AddGaussianNoise
+//import org.apache.spark.sql.catalyst.encoders.RowEncoder
 
 class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
 
@@ -56,13 +57,27 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
 
 
 // gradient of different loss functions
-  def lr_gradient(regterm: Double, theta: Seq[Double]): DataFrame = {
+  def lr_gradient(regterm: Double, theta: Seq[Double]): Seq[Double] = {
     if(ds.logicalPlan.isInstanceOf[OpaqueOperator]){
-      return Dataset.ofRows(ds.sparkSession, LrGradient(regterm, theta, ds.logicalPlan.asInstanceOf[OpaqueOperator]));
+      val df = Dataset.ofRows(ds.sparkSession, LrGradient(regterm, theta, ds.logicalPlan.asInstanceOf[OpaqueOperator]))
+      val dl = df.collect.map(_.toSeq.asInstanceOf[Seq[Double]].toList).toList
+      val height = dl.length
+      val width = dl(0).length
+      var thetaArray = new Array[Double](width-1)
+      for(i<-0 to width-2) {
+        for(j<-0 to height-1) {
+          thetaArray(i) += dl(j)(i)
+        }
+      }
+      for(i<-0 to width-2) {
+        thetaArray(i) /= height
+      }
+      return thetaArray.toList.toSeq.asInstanceOf[Seq[Double]]
     }
     else {
       println("Please encrypt the DataFrame first!")
-      return Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
+      val df = Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
+      return df.first.toSeq.asInstanceOf[Seq[Double]]
     }
   }
 

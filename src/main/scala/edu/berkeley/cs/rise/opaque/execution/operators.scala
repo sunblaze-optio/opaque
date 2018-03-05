@@ -71,6 +71,7 @@ case class EncryptedLocalTableScanExec(
         (start, end)
       }
     }
+    //print(sqlContext.sparkContext.defaultParallelism)
     val slicedPlaintextData: Seq[Seq[InternalRow]] =
       positions(unsafeRows.length, sqlContext.sparkContext.defaultParallelism).map {
         case (start, end) => unsafeRows.slice(start, end).toSeq
@@ -130,20 +131,6 @@ trait OpaqueOperatorExec extends SparkPlan {
       result
     }
   }
-
-  /*def timeOperatorBinary[A](leftRDD: RDD[A], rightRDD: RDD[A], desc: String)(f: (RDD[A], RDD[A]) => RDD[Block]): RDD[Block] = {
-    import Utils.time
-    Utils.ensureCached(leftRDD)
-    time(s"Force left child of $desc") {leftRDD.count}
-    Utils.ensureCached(rightRDD)
-    time(s"Force right child of $desc") {rightRDD.count}
-    time(desc) {
-      val result = f(leftRDD, rightRDD)
-      Utils.ensureCached(result)
-      result.count
-      result
-    }
-  }*/
 
   /**
    * An Opaque operator cannot return plaintext rows, so this method should normally not be invoked.

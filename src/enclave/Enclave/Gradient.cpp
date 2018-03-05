@@ -23,8 +23,11 @@ void lrgradient(uint8_t *regterm, size_t regterm_length,
 
   const tuix::DoubleField* regularization_term = flatbuffers::GetRoot<tuix::DoubleField>(regterm);
   const double reg_value = regularization_term->value();
+  double a = reg_value;
+  a = a+1;
 
   double c_theta[ATTRIBUTE_BOUND];
+  c_theta[0] = c_theta[0];
 
   const tuix::Row* para = flatbuffers::GetRoot<tuix::Row>(theta);
   int width = para->field_values()->Length();
@@ -47,6 +50,7 @@ void lrgradient(uint8_t *regterm, size_t regterm_length,
   while(r.has_next()) {
     ++sample_num;
     const tuix::Row *row = r.next();
+    //w.write(row);
     attribute_num = row->field_values()->Length()-1;
     for(int i = 0; i <= attribute_num; ++i) {
       double value = static_cast<const tuix::DoubleField*>(row->field_values()->Get(i)->value())->value();
@@ -66,13 +70,13 @@ void lrgradient(uint8_t *regterm, size_t regterm_length,
   //serialize_vector(builder, w, result, 1, attribute_num);
 
   sample_num = 1;
-  attribute_num = attribute_num+1;
+  attribute_num = attribute_num;
   for(int i = 0; i < sample_num; ++i) {
     std::vector<flatbuffers::Offset<tuix::Field> > tmp_row;
     for(int j = 0; j < attribute_num; ++j) {
       tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, result[j]).Union()));
   }
-    tmp_row = tmp_row;
+    tmp_row.push_back(tuix::CreateField(builder, tuix::FieldUnion_DoubleField, tuix::CreateDoubleField(builder, 0.0).Union()));
     const tuix::Row *final_row = flatbuffers::GetTemporaryPointer<tuix::Row>(builder, tuix::CreateRow(builder, builder.CreateVector(tmp_row)));
     w.write(final_row);
   }

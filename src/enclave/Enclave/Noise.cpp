@@ -60,8 +60,6 @@ void addgaussiannoise(uint8_t *noise_para, size_t noise_para_length,
   extract_vector(r, theta, sample_num, attribute_num);
 
   add_gaussian(std_dev, theta, attribute_num, result);
-  result[0] = sample_num;
-  result[1] = attribute_num;
   serialize_vector(builder, w, result, sample_num, attribute_num);
 
   w.finish(w.write_encrypted_blocks());

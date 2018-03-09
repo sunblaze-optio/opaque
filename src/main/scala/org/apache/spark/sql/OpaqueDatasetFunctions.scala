@@ -81,6 +81,21 @@ class OpaqueDatasetFunctions[T](ds: Dataset[T]) extends Serializable {
     }
   }
 
+  def lr_predict(theta: Seq[Double]): Seq[Double] = {
+    val df = Dataset.ofRows(ds.sparkSession, ds.logicalPlan)
+    val dl = df.collect.map(_.toSeq.asInstanceOf[Seq[Double]].toList).toList
+    val height = dl.length
+    val width = dl(0).length-1
+    var resArray = new Array[Double](height)
+    for(i<-0 to height-1) {
+      var res = 0.0;
+      for(j<-0 to width-1) {
+        res += theta(j)*dl(i)(j)
+      }
+      resArray(i) = if(res>0) 1.0 else -1.0 
+    }
+    resArray.toList.toSeq.asInstanceOf[Seq[Double]]
+  }
 
 
 // different noise we need to implement differential private algorithms.

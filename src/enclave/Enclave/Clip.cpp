@@ -25,11 +25,11 @@ void clip2norm(uint8_t *bound, size_t bound_length,
   EncryptedBlocksToRowReader r(input_rows, input_rows_length);
   FlatbuffersRowWriter w;
 
-  double features[1024];
+  double features[DATASET_BOUND];
   int sample_num;
   int attribute_num;
-  double labels[128];
-  double result[1024];
+  double labels[SAMPLE_BOUND];
+  double result[DATASET_BOUND];
 
   extract_dataset(r, features, labels, sample_num, attribute_num);
 
@@ -57,11 +57,11 @@ void clipinfnorm(uint8_t *bound, size_t bound_length,
   EncryptedBlocksToRowReader r(input_rows, input_rows_length);
   FlatbuffersRowWriter w;
 
-  double features[1000000];
+  double features[DATASET_BOUND];
   int sample_num;
   int attribute_num; 
-  double labels[10000];
-  double result[1000000];
+  double labels[SAMPLE_BOUND];
+  double result[DATASET_BOUND];
 
   extract_dataset(r, features, labels, sample_num, attribute_num);
 

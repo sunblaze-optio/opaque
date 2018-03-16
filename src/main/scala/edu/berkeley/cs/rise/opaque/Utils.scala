@@ -36,6 +36,7 @@ import org.apache.spark.sql.catalyst.expressions.Ascending
 import org.apache.spark.sql.catalyst.expressions.Attribute
 import org.apache.spark.sql.catalyst.expressions.AttributeReference
 import org.apache.spark.sql.catalyst.expressions.Cast
+import org.apache.spark.sql.catalyst.expressions.Contains
 import org.apache.spark.sql.catalyst.expressions.Descending
 import org.apache.spark.sql.catalyst.expressions.Divide
 import org.apache.spark.sql.catalyst.expressions.EqualTo
@@ -278,6 +279,12 @@ object Utils {
           tuix.FieldUnion.LongField,
           tuix.LongField.createLongField(builder, x),
           isNull)
+      case (null, LongType) =>
+        tuix.Field.createField(
+          builder,
+          tuix.FieldUnion.LongField,
+          tuix.LongField.createLongField(builder, 0L),
+          isNull)
       case (x: Float, FloatType) =>
         tuix.Field.createField(
           builder,
@@ -289,6 +296,12 @@ object Utils {
           builder,
           tuix.FieldUnion.DoubleField,
           tuix.DoubleField.createDoubleField(builder, x),
+          isNull)
+      case (null, DoubleType) =>
+        tuix.Field.createField(
+          builder,
+          tuix.FieldUnion.DoubleField,
+          tuix.DoubleField.createDoubleField(builder, 0.0),
           isNull)
       case (x: Int, DateType) =>
         tuix.Field.createField(
@@ -615,6 +628,13 @@ object Utils {
                 tuix.ExprUnion.IsNull,
                 tuix.IsNull.createIsNull(
                   builder, childOffset))))
+
+        case (Contains(left, right), Seq(leftOffset, rightOffset)) =>
+          tuix.Expr.createExpr(
+            builder,
+            tuix.ExprUnion.Contains,
+            tuix.Contains.createContains(
+              builder, leftOffset, rightOffset))
       }
     }
   }

@@ -11,29 +11,6 @@ extern "C" {
   JNIEXPORT void JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_StopEnclave(
     JNIEnv *, jobject, jlong);
 
-  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Clip2Norm(
-    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
-
-  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_ClipInfNorm(
-    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
-
-  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LrGradient(
-    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray, jbyteArray);
-
-  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_AddLaplaceNoise(
-    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
-
-  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_AddGaussianNoise(
-    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
-
-/*
-  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_LogisticRegression(
-    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
-
-  JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_DPLogisticRegression(
-    JNIEnv *, jobject, jlong, jbyteArray, jbyteArray, jbyteArray, jbyteArray);
-*/
-
   JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEnclave_Project(
     JNIEnv *, jobject, jlong, jbyteArray, jbyteArray);
 

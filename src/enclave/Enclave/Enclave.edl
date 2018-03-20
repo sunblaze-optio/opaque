@@ -7,49 +7,8 @@ enclave {
   include "sgx_key_exchange.h"
   include "sgx_trts.h"
   from "sgx_tkey_exchange.edl" import *;
-  from "sgx_tstd.edl" import *;
-  from "sgx_stdio.edl" import *;
-  from "sgx_backtrace.edl" import *;
 
   trusted {
-    public void ecall_clip2norm(
-      [in, count=bound_length] uint8_t *bound, size_t bound_length,
-      [user_check] uint8_t *input_rows, size_t input_rows_length,
-      [out] uint8_t **output_rows, [out] size_t *output_rows_length);
-
-    public void ecall_clipinfnorm(
-      [in, count=bound_length] uint8_t *bound, size_t bound_length,
-      [user_check] uint8_t *input_rows, size_t input_rows_length,
-      [out] uint8_t **output_rows, [out] size_t *output_rows_length);
-
-    public void ecall_lrgradient(
-      [in, count=regterm_length] uint8_t *regterm, size_t regterm_length,
-      [in, count=theta_length] uint8_t *theta, size_t theta_length,
-      [user_check] uint8_t *input_rows, size_t input_rows_length,
-      [out] uint8_t **output_rows, [out] size_t *output_rows_length);
-
-    public void ecall_addlaplacenoise(
-      [in, count=noise_para_length] uint8_t *noise_para, size_t noise_para_length,
-      [user_check] uint8_t *input_rows, size_t input_rows_length,
-      [out] uint8_t **output_rows, [out] size_t *output_rows_length);
-
-    public void ecall_addgaussiannoise(
-      [in, count=noise_para_length] uint8_t *noise_para, size_t noise_para_length,
-      [user_check] uint8_t *input_rows, size_t input_rows_length,
-      [out] uint8_t **output_rows, [out] size_t *output_rows_length);
-
-    /*public void ecall_logisticregression(
-      [in, count=regterm_length] uint8_t *regterm, size_t regterm_length,
-      [user_check] uint8_t *input_rows, size_t input_rows_length,
-      [out] uint8_t **output_rows, [out] size_t *output_rows_length);
-
-    public void ecall_dplogisticregression(
-      [in, count=regterm_length] uint8_t *regterm, size_t regterm_length,
-      [in, count=eps_length] uint8_t *eps, size_t eps_length,
-      [in, count=delta_length] uint8_t *delta, size_t delta_length,
-      [user_check] uint8_t *input_rows, size_t input_rows_length,
-      [out] uint8_t **output_rows, [out] size_t *output_rows_length);*/
-
     public void ecall_project(
       [in, count=project_list_length] uint8_t *project_list, size_t project_list_length,
       [user_check] uint8_t *input_rows, size_t input_rows_length,

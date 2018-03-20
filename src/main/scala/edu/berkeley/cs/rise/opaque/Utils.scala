@@ -639,35 +639,6 @@ object Utils {
     }
   }
 
-  def serializeField(value: Any, dataType: DataType): Array[Byte] = {
-    val builder = new FlatBufferBuilder
-    (value, dataType) match {
-      case (x: Double, DoubleType) => {
-        builder.finish(
-          tuix.DoubleField.createDoubleField(
-            builder,
-            x
-          )
-        )
-        builder.sizedByteArray()
-      }
-    }
-  }
-
-  def serializeRow(values: Seq[Any], dataType: DataType): Array[Byte] = {
-    val builder = new FlatBufferBuilder
-
-    builder.finish(tuix.Row.createRow(
-      builder, 
-      tuix.Row.createFieldValuesVector(
-        builder,
-        values.map {
-          case x => flatbuffersCreateField(builder, x, DoubleType, false)
-        }.toArray), 
-        false))
-    builder.sizedByteArray()
-  }
-
   def serializeFilterExpression(condition: Expression, input: Seq[Attribute]): Array[Byte] = {
     val builder = new FlatBufferBuilder
     builder.finish(
@@ -947,5 +918,4 @@ object Utils {
         builder, tuix.EncryptedBlocks.createBlocksVector(builder, Array.empty)))
     Block(builder.sizedByteArray())
   }
-
 }

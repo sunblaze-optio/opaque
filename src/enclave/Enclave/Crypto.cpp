@@ -72,6 +72,7 @@ void decrypt(const uint8_t *ciphertext, uint32_t ciphertext_length,
   AesGcm decipher(ks, iv_ptr, SGX_AESGCM_IV_SIZE);
   decipher.decrypt(ciphertext_ptr, plaintext_length, plaintext, plaintext_length);
   if (memcmp(mac_ptr, decipher.tag().t, SGX_AESGCM_MAC_SIZE) != 0) {
+    printf("haha\n");
     printf("Decrypt: invalid mac\n");
   }
 }

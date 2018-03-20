@@ -33,7 +33,7 @@ void addlaplacenoise(uint8_t *noise_para, size_t noise_para_length,
   serialize_vector(builder, w, result, sample_num, attribute_num);
 
   w.finish(w.write_encrypted_blocks());
-  *output_rows = w.output_buffer();
+  *output_rows = w.output_buffer().release();
   *output_rows_length = w.output_size();
 }
 
@@ -63,6 +63,6 @@ void addgaussiannoise(uint8_t *noise_para, size_t noise_para_length,
   serialize_vector(builder, w, result, sample_num, attribute_num);
 
   w.finish(w.write_encrypted_blocks());
-  *output_rows = w.output_buffer();
+  *output_rows = w.output_buffer().release();
   *output_rows_length = w.output_size();
 }

@@ -712,13 +712,13 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
 
   uint8_t *output_rows;
   size_t output_rows_length;
-
+  printf("beforeClip2Norm: input len: %u, output len: %u\n", input_rows_length, (uint32_t) output_rows_length);
   sgx_check("Clip2Norm",
             ecall_clip2norm(
               eid, bound_ptr, bound_length,
               input_rows_ptr, input_rows_length,
               &output_rows, &output_rows_length));
-
+  printf("afterClip2Norm: input len: %u, output len: %u\n", input_rows_length, (uint32_t) output_rows_length);
   env->ReleaseByteArrayElements(bound, (jbyte *) bound_ptr, 0);
   env->ReleaseByteArrayElements(input_rows, (jbyte *) input_rows_ptr, 0);
 
@@ -1010,7 +1010,7 @@ JNIEXPORT jbyteArray JNICALL Java_edu_berkeley_cs_rise_opaque_execution_SGXEncla
   jbyteArray ciphertext = env->NewByteArray(clength);
 
   uint8_t *ciphertext_copy = new uint8_t[clength];
-
+  printf("plength: %u, SGX_AESGCM_IV_SIZE: %u, SGX_AESGCM_MAC_SIZE: %u, clength: %u\n", plength, SGX_AESGCM_IV_SIZE, SGX_AESGCM_MAC_SIZE, (uint32_t)clength);
   sgx_check_quiet(
     "Encrypt", ecall_encrypt(eid, plaintext_ptr, plength, ciphertext_copy, (uint32_t) clength));
 

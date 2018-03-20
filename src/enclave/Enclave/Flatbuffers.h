@@ -362,6 +362,7 @@ public:
         enc_block_builder.CreateVector(enc_rows.get(), enc_rows_len)));
 
     rows_vector.clear();
+    builder.Clear();
   }
 
   flatbuffers::Offset<tuix::EncryptedBlocks> write_encrypted_blocks() {
